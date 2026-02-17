@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+/* Colorado Spartans Theme */
+@theme {
+  --color-spartans-cyan: #00b4d8;
+  --color-spartans-black: #000000;
+  --color-spartans-green: #23a455;
+  --color-spartans-gold: #ffbb00;
+
+  /* Seat states */
+  --color-seat-available: #00b4d8;
+  --color-seat-selected: #23a455;
+  --color-seat-sold: #6b7280;
+  --color-seat-hover: #0096c7;
+
+  /* Font families */
+  --font-heading: 'Anton', 'Archivo Black', sans-serif;
+  --font-body: 'Montserrat', 'Open Sans', sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-black text-white font-body min-h-screen;
+  }
+
+  h1, h2, h3 {
+    @apply font-heading uppercase tracking-wide;
+  }
+}

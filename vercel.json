@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "buildCommand": "cd client && npm run build",
+  "outputDirectory": "client/dist",
+  "installCommand": "cd client && npm install",
+  "framework": null,
+  "rewrites": [
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
+  ],
+  "env": {
+    "ADMIN_PASSWORD": "spartans2024"
+  }
+}
