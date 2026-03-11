@@ -11,13 +11,26 @@ interface SeatMapProps {
   onGameChange: (gameId: string) => void;
 }
 
-export const GAMES = [
-  { id: '1', date: '2026-04-11', opponent: 'Amarillo Warbirds', time: '7:00 PM', dateDisplay: 'Fri, Apr 11' },
-  { id: '2', date: '2026-04-18', opponent: 'Omaha Beef', time: '7:00 PM', dateDisplay: 'Sat, Apr 18' },
-  { id: '3', date: '2026-05-02', opponent: 'Pueblo Punishers', time: '7:00 PM', dateDisplay: 'Sat, May 2' },
-  { id: '4', date: '2026-05-10', opponent: 'Dallas Bulls', time: '7:00 PM', dateDisplay: 'Sun, May 10' },
-  { id: '5', date: '2026-05-30', opponent: 'Salina Liberty', time: '7:00 PM', dateDisplay: 'Sat, May 30' },
+function formatGameDate(dateStr: string): string {
+  return new Date(dateStr + 'T12:00:00').toLocaleDateString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+  });
+}
+
+const GAMES_RAW = [
+  { id: '1', date: '2026-04-11', opponent: 'Amarillo Warbirds', time: '7:00 PM' },
+  { id: '2', date: '2026-04-18', opponent: 'Omaha Beef', time: '7:00 PM' },
+  { id: '3', date: '2026-05-02', opponent: 'Pueblo Punishers', time: '7:00 PM' },
+  { id: '4', date: '2026-05-10', opponent: 'Dallas Bulls', time: '7:00 PM' },
+  { id: '5', date: '2026-05-30', opponent: 'Salina Liberty', time: '7:00 PM' },
 ];
+
+export const GAMES = GAMES_RAW.map(g => ({
+  ...g,
+  dateDisplay: formatGameDate(g.date),
+}));
 
 // Center point for the arena
 const CX = 400, CY = 260;
