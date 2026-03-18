@@ -94,7 +94,7 @@ function App() {
     );
   }
 
-  if (window.location.pathname === '/ga') {
+  if (window.location.pathname === '/ga' || window.location.pathname === '/ga/') {
     return <GASalesPage onBackToHome={() => { window.location.href = '/'; }} />;
   }
 

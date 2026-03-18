@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import { ArrowLeft, CreditCard, Loader2, ShieldCheck, Ticket } from 'lucide-react';
-import { GAMES } from './SeatMap';
 
 interface GASalesPageProps {
   onBackToHome: () => void;
@@ -9,9 +8,15 @@ interface GASalesPageProps {
 const SINGLE_GA_PRICE = 3500;
 const FAMILY_PACK_PRICE = 10000;
 const PROCESSING_FEE = 499;
+const EVENT_INFO = {
+  id: '1',
+  opponent: 'Amarillo Warbirds',
+  date: '2026-04-11',
+  dateDisplay: 'Sat, Apr 11',
+  time: '7:00 PM',
+};
 
 export function GASalesPage({ onBackToHome }: GASalesPageProps) {
-  const [selectedGameId, setSelectedGameId] = useState(GAMES[0].id);
   const [singleQty, setSingleQty] = useState(1);
   const [familyQty, setFamilyQty] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -22,8 +27,6 @@ export function GASalesPage({ onBackToHome }: GASalesPageProps) {
     email: '',
     phone: '',
   });
-
-  const selectedGame = GAMES.find((game) => game.id === selectedGameId) || GAMES[0];
 
   const subtotal = useMemo(() => {
     return (singleQty * SINGLE_GA_PRICE) + (familyQty * FAMILY_PACK_PRICE);
@@ -55,11 +58,11 @@ export function GASalesPage({ onBackToHome }: GASalesPageProps) {
           singleQty,
           familyQty,
           game: {
-            id: selectedGame.id,
-            opponent: selectedGame.opponent,
-            date: selectedGame.date,
-            dateDisplay: selectedGame.dateDisplay,
-            time: selectedGame.time,
+            id: EVENT_INFO.id,
+            opponent: EVENT_INFO.opponent,
+            date: EVENT_INFO.date,
+            dateDisplay: EVENT_INFO.dateDisplay,
+            time: EVENT_INFO.time,
           },
           customer: formData,
         }),
@@ -96,11 +99,14 @@ export function GASalesPage({ onBackToHome }: GASalesPageProps) {
         <section className="rounded-2xl border border-cyan-500/30 bg-gradient-to-br from-cyan-500/15 via-gray-950 to-black p-8 mb-8">
           <div className="flex flex-wrap items-center justify-between gap-6">
             <div className="max-w-2xl">
-              <p className="text-cyan-400 font-bold uppercase tracking-widest text-sm">General Admission Experience</p>
-              <h1 className="text-4xl md:text-5xl font-black mt-2">Colorado Spartans GA Tickets</h1>
+              <p className="text-cyan-400 font-bold uppercase tracking-widest text-sm">Official GA Sales Page</p>
+              <h1 className="text-4xl md:text-5xl font-black mt-2">Sit Anywhere In The Stadium</h1>
               <p className="text-gray-300 mt-4 text-lg">
-                One ticket gets you in. Sit anywhere in the arena. Bring your crew and choose between a single GA
-                ticket or a family four-pack.
+                Every ticket is general admission. No section selection and no assigned seats. Buy your pass and choose
+                any open seat when you arrive.
+              </p>
+              <p className="text-cyan-300 mt-4 font-semibold">
+                Colorado Spartans vs {EVENT_INFO.opponent} • {EVENT_INFO.dateDisplay} • {EVENT_INFO.time}
               </p>
               <div className="mt-6 flex flex-wrap gap-4">
                 <div className="px-4 py-2 rounded-full border border-cyan-500/40 text-cyan-300">Single GA: $35</div>
@@ -114,19 +120,11 @@ export function GASalesPage({ onBackToHome }: GASalesPageProps) {
         <section className="grid lg:grid-cols-2 gap-8">
           <div className="space-y-6">
             <div className="bg-gray-950 rounded-xl border border-gray-800 p-6">
-              <h2 className="text-xl font-bold mb-2">Pick Your Game</h2>
-              <p className="text-gray-400 mb-4">General admission applies to all open seats in the arena.</p>
-              <select
-                value={selectedGameId}
-                onChange={(e) => setSelectedGameId(e.target.value)}
-                className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3"
-              >
-                {GAMES.map((game) => (
-                  <option key={game.id} value={game.id}>
-                    {game.dateDisplay} vs {game.opponent} - {game.time}
-                  </option>
-                ))}
-              </select>
+              <h2 className="text-xl font-bold mb-2">General Admission Only</h2>
+              <p className="text-gray-300">
+                This page sells GA tickets only. There is no seat picking flow and no section-by-section checkout.
+              </p>
+              <p className="text-gray-400 mt-3">Choose your quantity below, check out, and sit anywhere in the stadium.</p>
             </div>
 
             <div className="bg-gray-950 rounded-xl border border-gray-800 p-6">
@@ -149,6 +147,15 @@ export function GASalesPage({ onBackToHome }: GASalesPageProps) {
                   </text>
                 </svg>
               </div>
+            </div>
+
+            <div className="bg-cyan-500/10 border border-cyan-500/30 rounded-xl p-6">
+              <h3 className="font-bold text-cyan-300 mb-2">What You Get</h3>
+              <ul className="text-gray-200 space-y-2 list-disc list-inside">
+                <li>Fast GA entry for your whole group</li>
+                <li>Freedom to sit anywhere in the arena</li>
+                <li>Mobile-friendly checkout in under a minute</li>
+              </ul>
             </div>
           </div>
 
