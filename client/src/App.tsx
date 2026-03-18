@@ -4,17 +4,19 @@ import { Cart } from './components/Cart';
 import { AdminLogin } from './components/AdminLogin';
 import { AdminDashboard } from './components/AdminDashboard';
 import { CheckoutModal, type CheckoutData } from './components/CheckoutModal';
+import { GASalesPage } from './components/GASalesPage';
 import { useCart } from './hooks/useCart';
 import { useSeats } from './hooks/useSeats';
 import type { Section, Seat } from './types';
 
 function App() {
-  const { sections, seats, loading, error } = useSeats();
+  const [selectedGameId, setSelectedGameId] = useState(GAMES[0].id);
+  const { sections, seats, loading, error } = useSeats(selectedGameId);
   const cart = useCart();
   const [isAdmin, setIsAdmin] = useState(false);
   const [adminError, setAdminError] = useState('');
   const [showCheckout, setShowCheckout] = useState(false);
-  const [selectedGameId, setSelectedGameId] = useState(GAMES[0].id);
+  const [showGaPopup, setShowGaPopup] = useState(false);
 
   const selectedGame = GAMES.find(g => g.id === selectedGameId) || GAMES[0];
 
@@ -74,8 +76,8 @@ function App() {
           </div>
           <h1 className="text-3xl font-bold text-white mb-4">Payment Successful!</h1>
           <p className="text-gray-400 mb-6">
-            Thank you for your purchase! Your tickets have been confirmed.
-            You'll receive a confirmation email shortly.
+            Thank you for your purchase. Your Spartans tickets are confirmed.
+            You will receive a confirmation email shortly.
           </p>
           <div className="bg-gray-800 rounded-lg p-4 mb-6">
             <p className="text-cyan-400 font-bold">Colorado Spartans</p>
@@ -90,6 +92,10 @@ function App() {
         </div>
       </div>
     );
+  }
+
+  if (window.location.pathname === '/ga') {
+    return <GASalesPage onBackToHome={() => { window.location.href = '/'; }} />;
   }
 
   // Track selected seat IDs for current game
@@ -171,6 +177,19 @@ function App() {
     <div className="min-h-screen bg-black">
       {/* Main content */}
       <main className="container mx-auto px-4 py-8">
+        <div className="mb-6 rounded-xl border border-cyan-500/35 bg-cyan-500/10 p-5 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <p className="text-cyan-400 font-bold">Now Offering General Admission</p>
+            <p className="text-gray-300">Single GA $35 or Family 4-Pack $100. Sit anywhere in the arena.</p>
+          </div>
+          <button
+            onClick={() => setShowGaPopup(true)}
+            className="bg-cyan-500 hover:bg-cyan-400 text-black font-bold px-6 py-3 rounded-lg transition-colors"
+          >
+            Buy GA Tickets
+          </button>
+        </div>
+
         <div className="grid lg:grid-cols-3 gap-8">
             {/* Seat Map - takes 2 columns on large screens */}
             <div className="lg:col-span-2">
@@ -222,6 +241,35 @@ function App() {
           onClose={() => setShowCheckout(false)}
           onComplete={handleCheckoutComplete}
         />
+      )}
+
+      {showGaPopup && (
+        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
+          <div className="w-full max-w-xl rounded-xl border border-cyan-500/30 bg-gray-900 p-6">
+            <h2 className="text-2xl font-bold text-white mb-2">General Admission Is Live</h2>
+            <p className="text-gray-300 mb-2">
+              Skip section-by-section selection and lock in your seats with a simple GA purchase.
+            </p>
+            <p className="text-cyan-400 font-semibold mb-6">
+              Single GA: $35 • Family 4-Pack: $100
+            </p>
+
+            <div className="flex flex-wrap gap-3 justify-end">
+              <button
+                onClick={() => setShowGaPopup(false)}
+                className="px-4 py-2 rounded-lg border border-gray-700 text-gray-300 hover:bg-gray-800 transition-colors"
+              >
+                Stay on This Page
+              </button>
+              <button
+                onClick={() => { window.location.href = '/ga'; }}
+                className="px-5 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-black font-bold transition-colors"
+              >
+                Continue to GA Sales Page
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
