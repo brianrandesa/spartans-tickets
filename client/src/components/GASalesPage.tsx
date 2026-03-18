@@ -301,7 +301,7 @@ export function GASalesPage({ onBackToHome }: GASalesPageProps) {
               ) : (
                 <>
                   <CreditCard className="w-5 h-5" />
-                  Checkout GA Tickets
+                  Secure Your Ticket
                 </>
               )}
             </button>

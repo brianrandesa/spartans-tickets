@@ -100,7 +100,7 @@ export function HomeMarketingPage({ onOpenSalesPopup }: HomeMarketingPageProps) 
               onClick={onOpenSalesPopup}
               className="text-gray-300 hover:text-cyan-300 transition-colors"
             >
-              Tickets
+              Secure Your Ticket
             </button>
             {TOP_LINKS.map((link) => (
               <a
@@ -147,7 +147,7 @@ export function HomeMarketingPage({ onOpenSalesPopup }: HomeMarketingPageProps) 
                 onClick={onOpenSalesPopup}
                 className="bg-cyan-500 hover:bg-cyan-400 text-black font-bold px-7 py-3 rounded-lg transition"
               >
-                Secure Your Ticket Now
+                Secure Your Ticket
               </button>
             </div>
           </div>
@@ -226,7 +226,7 @@ export function HomeMarketingPage({ onOpenSalesPopup }: HomeMarketingPageProps) 
               onClick={onOpenSalesPopup}
               className="bg-cyan-500 hover:bg-cyan-400 text-black font-bold px-8 py-4 rounded-lg transition text-lg"
             >
-              Secure Tickets
+              Secure Your Ticket
             </button>
           </div>
         </section>
@@ -262,9 +262,17 @@ export function HomeMarketingPage({ onOpenSalesPopup }: HomeMarketingPageProps) 
       </footer>
 
       <div className="fixed bottom-0 inset-x-0 z-40 border-t border-cyan-500/30 bg-black/90 backdrop-blur-sm">
-        <div className="container mx-auto px-4 py-3 text-center">
-          <p className="text-cyan-300 text-sm font-semibold uppercase tracking-[0.18em]">First Home Game</p>
-          <p className="text-white text-lg md:text-2xl font-black">{countdownLabel}</p>
+        <div className="container mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-center gap-4">
+          <div className="text-center">
+            <p className="text-cyan-300 text-sm font-semibold uppercase tracking-[0.18em]">First Home Game</p>
+            <p className="text-white text-lg md:text-2xl font-black">{countdownLabel}</p>
+          </div>
+          <button
+            onClick={onOpenSalesPopup}
+            className="bg-cyan-500 hover:bg-cyan-400 text-black font-bold px-6 py-2 rounded-lg transition"
+          >
+            Secure Your Ticket
+          </button>
         </div>
       </div>
     </div>
