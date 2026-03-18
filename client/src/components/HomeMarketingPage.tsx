@@ -6,13 +6,14 @@ interface HomeMarketingPageProps {
 
 const GAME_DATE = 'April 11, 2026';
 const VENUE = 'Denver Coliseum';
+const SEASON_TICKETS_URL = 'https://www.tickettailor.com/events/coloradospartans/1934702';
 const HERO_BACKGROUND_IMAGE = 'https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/UIgZIZySfnBryLV4WWIh/media/6994af936bac2409e00d08f1.jpeg';
 const MIDDLE_BACKGROUND_IMAGE = 'https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/UIgZIZySfnBryLV4WWIh/media/696829b8cafecf588bc1b1e8.jpg';
 const DEFAULT_HERO_VIDEO = 'https://player.vimeo.com/video/1121057331?app_id=122963&autoplay=0&controls=1';
 const FIRST_HOME_GAME_ISO = '2026-04-11T19:00:00';
 
 const TOP_LINKS = [
-  { label: 'Spartan Club', href: 'https://www.tickettailor.com/events/coloradospartans/1934702' },
+  { label: 'Season Tickets', href: SEASON_TICKETS_URL },
   { label: 'Store', href: 'https://shopcoloradospartans.com/' },
   { label: 'Schedule', href: 'https://www.co-spartans.com/schedule' },
   { label: 'Our Partners', href: 'https://www.co-spartans.com/partners' },
@@ -253,13 +254,21 @@ export function HomeMarketingPage({ onOpenSalesPopup }: HomeMarketingPageProps) 
               </ul>
             </div>
           </div>
-          <div className="mt-8 flex justify-center">
+          <div className="mt-8 flex justify-center gap-3 flex-wrap">
             <button
               onClick={onOpenSalesPopup}
               className="bg-cyan-500 hover:bg-cyan-400 text-black font-bold px-8 py-4 rounded-lg transition text-lg"
             >
               Secure Your Ticket
             </button>
+            <a
+              href={SEASON_TICKETS_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="border border-cyan-500 text-cyan-300 hover:bg-cyan-500 hover:text-black font-bold px-8 py-4 rounded-lg transition text-lg"
+            >
+              Buy Season Tickets
+            </a>
           </div>
         </section>
 
