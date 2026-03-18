@@ -266,8 +266,8 @@ export function HomeMarketingPage({ onOpenSalesPopup }: HomeMarketingPageProps) 
         <section className="container mx-auto px-4 py-14">
           <div className="max-w-3xl mb-6 mx-auto">
             <p className="text-cyan-400 uppercase tracking-[0.2em] font-semibold text-sm">Shields Up</p>
-            <h2 className="text-3xl font-black mt-3">Bottom Image Gallery Ready</h2>
-            <p className="text-gray-300 mt-3">Add your four best game-day photos here to finish out the page like your previous design.</p>
+            <h2 className="text-3xl font-black mt-3">Game Day Highlights</h2>
+            <p className="text-gray-300 mt-3">Experience the energy, family atmosphere, and nonstop action at Colorado Spartans home games.</p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {BOTTOM_IMAGE_SLOTS.map((slot) => (
