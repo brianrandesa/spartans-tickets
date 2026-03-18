@@ -98,9 +98,12 @@ function App() {
       <HomeMarketingPage onOpenSalesPopup={() => setShowGaPopup(true)} />
 
       {showGaPopup && (
-        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
-          <div className="w-full max-w-xl rounded-xl border border-cyan-500/30 bg-gray-900 p-6 text-center">
-            <h2 className="text-2xl font-bold text-white mb-2">General Admission Is Live</h2>
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-xl rounded-2xl border border-cyan-400/40 bg-gradient-to-b from-gray-900 to-black shadow-[0_0_40px_rgba(34,211,238,0.18)] p-7 text-center">
+            <div className="inline-flex items-center px-3 py-1 rounded-full border border-cyan-400/30 bg-cyan-500/10 text-cyan-300 text-xs font-semibold tracking-[0.18em] uppercase mb-4">
+              Secure Your Seats
+            </div>
+            <h2 className="text-3xl font-black text-white mb-2">General Admission Is Live</h2>
             <p className="text-gray-300 mb-2">
               All tickets are now general admission. Buy fast and sit anywhere in the stadium.
             </p>
@@ -132,29 +135,28 @@ function App() {
                   required
                 />
               </div>
-              <div className="grid sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-sm text-gray-400 mb-1">Email *</label>
-                  <input
-                    type="email"
-                    value={leadData.email}
-                    onChange={(e) => setLeadData({ ...leadData, email: e.target.value })}
-                    className="w-full px-4 py-3 bg-gray-950 border border-gray-700 rounded-lg text-white text-center focus:outline-none focus:border-cyan-500"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm text-gray-400 mb-1">Phone *</label>
-                  <input
-                    type="tel"
-                    value={leadData.phone}
-                    onChange={(e) => setLeadData({ ...leadData, phone: e.target.value })}
-                    className="w-full px-4 py-3 bg-gray-950 border border-gray-700 rounded-lg text-white text-center focus:outline-none focus:border-cyan-500"
-                    required
-                  />
-                </div>
+              <div>
+                <label className="block text-sm text-gray-400 mb-1">Email *</label>
+                <input
+                  type="email"
+                  value={leadData.email}
+                  onChange={(e) => setLeadData({ ...leadData, email: e.target.value })}
+                  className="w-full px-4 py-3 bg-gray-950 border border-gray-700 rounded-lg text-white text-center focus:outline-none focus:border-cyan-500"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm text-gray-400 mb-1">Phone *</label>
+                <input
+                  type="tel"
+                  value={leadData.phone}
+                  onChange={(e) => setLeadData({ ...leadData, phone: e.target.value })}
+                  className="w-full px-4 py-3 bg-gray-950 border border-gray-700 rounded-lg text-white text-center focus:outline-none focus:border-cyan-500"
+                  required
+                />
               </div>
               {leadError && <p className="text-red-400 text-sm">{leadError}</p>}
+              <p className="text-xs text-gray-500 pt-1">We will pre-fill your checkout details on the next page.</p>
               <div className="flex flex-wrap gap-3 justify-center pt-1">
                 <button
                   type="button"
