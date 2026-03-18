@@ -56,8 +56,8 @@ export function HomeMarketingPage({ onOpenSalesPopup }: HomeMarketingPageProps) 
   const heroStyle = HERO_BACKGROUND_IMAGE
     ? {
         backgroundImage: `linear-gradient(rgba(0,0,0,0.72), rgba(0,0,0,0.82)), url(${HERO_BACKGROUND_IMAGE})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        backgroundSize: '100% 100%',
+        backgroundPosition: 'center top',
       }
     : undefined;
 
@@ -95,8 +95,8 @@ export function HomeMarketingPage({ onOpenSalesPopup }: HomeMarketingPageProps) 
       </header>
 
       <main className="text-center">
-        <section className="container mx-auto px-4 py-14 rounded-2xl mt-6 border border-gray-900" style={heroStyle}>
-          <div className="max-w-4xl mx-auto">
+        <section className="w-full min-h-[calc(100vh-88px)] px-4 py-14 border-b border-gray-900 flex items-center" style={heroStyle}>
+          <div className="max-w-4xl mx-auto w-full">
             <p className="text-cyan-400 uppercase tracking-[0.2em] font-semibold text-sm">Join Us For The Official Season Opener</p>
             <h1 className="text-4xl md:text-6xl font-black leading-tight mt-4">
               Pro Arena Football Is Back In Denver
