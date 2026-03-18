@@ -8,6 +8,12 @@ function App() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [adminError, setAdminError] = useState('');
   const [showGaPopup, setShowGaPopup] = useState(false);
+  const [leadData, setLeadData] = useState({
+    ticketName: '',
+    email: '',
+    phone: '',
+  });
+  const [leadError, setLeadError] = useState('');
 
   // Check for admin mode in URL
   useEffect(() => {
@@ -98,24 +104,73 @@ function App() {
             <p className="text-gray-300 mb-2">
               All tickets are now general admission. Buy fast and sit anywhere in the stadium.
             </p>
-            <p className="text-cyan-400 font-semibold mb-6">
+            <p className="text-cyan-400 font-semibold mb-4">
               Single GA: $35 • Family 4-Pack: $100
             </p>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (!leadData.ticketName || !leadData.email || !leadData.phone) {
+                  setLeadError('Please fill out name, email, and phone to continue.');
+                  return;
+                }
 
-            <div className="flex flex-wrap gap-3 justify-end">
-              <button
-                onClick={() => setShowGaPopup(false)}
-                className="px-4 py-2 rounded-lg border border-gray-700 text-gray-300 hover:bg-gray-800 transition-colors"
-              >
-                Stay on This Page
-              </button>
-              <button
-                onClick={() => { window.location.href = '/ga'; }}
-                className="px-5 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-black font-bold transition-colors"
-              >
-                Continue to GA Sales Page
-              </button>
-            </div>
+                sessionStorage.setItem('spartans-ga-lead', JSON.stringify(leadData));
+                setLeadError('');
+                window.location.href = '/ga';
+              }}
+              className="space-y-3"
+            >
+              <div>
+                <label className="block text-sm text-gray-400 mb-1">What name are we putting on these tickets? *</label>
+                <input
+                  type="text"
+                  value={leadData.ticketName}
+                  onChange={(e) => setLeadData({ ...leadData, ticketName: e.target.value })}
+                  className="w-full px-4 py-3 bg-gray-950 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-cyan-500"
+                  placeholder="Full name"
+                  required
+                />
+              </div>
+              <div className="grid sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-sm text-gray-400 mb-1">Email *</label>
+                  <input
+                    type="email"
+                    value={leadData.email}
+                    onChange={(e) => setLeadData({ ...leadData, email: e.target.value })}
+                    className="w-full px-4 py-3 bg-gray-950 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-cyan-500"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-gray-400 mb-1">Phone *</label>
+                  <input
+                    type="tel"
+                    value={leadData.phone}
+                    onChange={(e) => setLeadData({ ...leadData, phone: e.target.value })}
+                    className="w-full px-4 py-3 bg-gray-950 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-cyan-500"
+                    required
+                  />
+                </div>
+              </div>
+              {leadError && <p className="text-red-400 text-sm">{leadError}</p>}
+              <div className="flex flex-wrap gap-3 justify-end pt-1">
+                <button
+                  type="button"
+                  onClick={() => setShowGaPopup(false)}
+                  className="px-4 py-2 rounded-lg border border-gray-700 text-gray-300 hover:bg-gray-800 transition-colors"
+                >
+                  Stay on This Page
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-black font-bold transition-colors"
+                >
+                  Continue to GA Sales Page
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

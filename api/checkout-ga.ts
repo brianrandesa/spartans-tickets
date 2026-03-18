@@ -19,10 +19,15 @@ interface GameInfo {
 }
 
 interface CustomerInfo {
-  firstName: string;
-  lastName: string;
+  name: string;
   email: string;
-  phone?: string;
+  phone: string;
+}
+
+interface GameSelection {
+  game: GameInfo;
+  singleQty: unknown;
+  familyQty: unknown;
 }
 
 function sanitizeQty(value: unknown): number {
@@ -44,30 +49,41 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { singleQty, familyQty, game, customer } = req.body as {
-    singleQty: unknown;
-    familyQty: unknown;
-    game?: GameInfo;
+  const { selections, customer } = req.body as {
+    selections?: GameSelection[];
     customer?: CustomerInfo;
   };
 
-  const normalizedSingleQty = sanitizeQty(singleQty);
-  const normalizedFamilyQty = sanitizeQty(familyQty);
-
-  if (normalizedSingleQty + normalizedFamilyQty === 0) {
-    return res.status(400).json({ error: 'Select at least one ticket option' });
-  }
-
-  if (!customer?.firstName || !customer?.lastName || !customer?.email) {
+  if (!customer?.name || !customer?.email || !customer?.phone) {
     return res.status(400).json({ error: 'Missing required customer fields' });
   }
 
-  if (!game?.id || !game?.opponent || !game?.dateDisplay || !game?.time) {
-    return res.status(400).json({ error: 'Missing game information' });
+  const normalizedSelections = (selections || [])
+    .map((selection) => ({
+      game: selection.game,
+      singleQty: sanitizeQty(selection.singleQty),
+      familyQty: sanitizeQty(selection.familyQty),
+    }))
+    .filter((selection) => selection.singleQty > 0 || selection.familyQty > 0)
+    .filter((selection) =>
+      !!selection.game?.id &&
+      !!selection.game?.opponent &&
+      !!selection.game?.dateDisplay &&
+      !!selection.game?.time
+    );
+
+  if (normalizedSelections.length === 0) {
+    return res.status(400).json({ error: 'Select at least one game and ticket quantity' });
   }
 
-  const totalAmount = (normalizedSingleQty * SINGLE_GA_PRICE) + (normalizedFamilyQty * FAMILY_PACK_PRICE) + PROCESSING_FEE;
-  const totalTickets = normalizedSingleQty + (normalizedFamilyQty * 4);
+  const totalAmount =
+    normalizedSelections.reduce((sum, selection) => {
+      return sum + (selection.singleQty * SINGLE_GA_PRICE) + (selection.familyQty * FAMILY_PACK_PRICE);
+    }, 0) + PROCESSING_FEE;
+
+  const totalTickets = normalizedSelections.reduce((sum, selection) => {
+    return sum + selection.singleQty + (selection.familyQty * 4);
+  }, 0);
 
   try {
     const lineItemsParams = new URLSearchParams();
@@ -78,23 +94,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     let lineItemIndex = 0;
 
-    if (normalizedSingleQty > 0) {
-      lineItemsParams.set(`line_items[${lineItemIndex}][price_data][currency]`, 'usd');
-      lineItemsParams.set(`line_items[${lineItemIndex}][price_data][product_data][name]`, 'General Admission Ticket');
-      lineItemsParams.set(`line_items[${lineItemIndex}][price_data][product_data][description]`, `${game.dateDisplay} at ${game.time} • Colorado Spartans vs ${game.opponent}`);
-      lineItemsParams.set(`line_items[${lineItemIndex}][price_data][unit_amount]`, SINGLE_GA_PRICE.toString());
-      lineItemsParams.set(`line_items[${lineItemIndex}][quantity]`, normalizedSingleQty.toString());
-      lineItemIndex++;
-    }
+    normalizedSelections.forEach((selection) => {
+      if (selection.singleQty > 0) {
+        lineItemsParams.set(`line_items[${lineItemIndex}][price_data][currency]`, 'usd');
+        lineItemsParams.set(`line_items[${lineItemIndex}][price_data][product_data][name]`, `GA Ticket • vs ${selection.game.opponent}`);
+        lineItemsParams.set(`line_items[${lineItemIndex}][price_data][product_data][description]`, `${selection.game.dateDisplay} at ${selection.game.time}`);
+        lineItemsParams.set(`line_items[${lineItemIndex}][price_data][unit_amount]`, SINGLE_GA_PRICE.toString());
+        lineItemsParams.set(`line_items[${lineItemIndex}][quantity]`, selection.singleQty.toString());
+        lineItemIndex++;
+      }
 
-    if (normalizedFamilyQty > 0) {
-      lineItemsParams.set(`line_items[${lineItemIndex}][price_data][currency]`, 'usd');
-      lineItemsParams.set(`line_items[${lineItemIndex}][price_data][product_data][name]`, 'General Admission Family 4-Pack');
-      lineItemsParams.set(`line_items[${lineItemIndex}][price_data][product_data][description]`, `${game.dateDisplay} at ${game.time} • Colorado Spartans vs ${game.opponent}`);
-      lineItemsParams.set(`line_items[${lineItemIndex}][price_data][unit_amount]`, FAMILY_PACK_PRICE.toString());
-      lineItemsParams.set(`line_items[${lineItemIndex}][quantity]`, normalizedFamilyQty.toString());
-      lineItemIndex++;
-    }
+      if (selection.familyQty > 0) {
+        lineItemsParams.set(`line_items[${lineItemIndex}][price_data][currency]`, 'usd');
+        lineItemsParams.set(`line_items[${lineItemIndex}][price_data][product_data][name]`, `GA Family 4-Pack • vs ${selection.game.opponent}`);
+        lineItemsParams.set(`line_items[${lineItemIndex}][price_data][product_data][description]`, `${selection.game.dateDisplay} at ${selection.game.time}`);
+        lineItemsParams.set(`line_items[${lineItemIndex}][price_data][unit_amount]`, FAMILY_PACK_PRICE.toString());
+        lineItemsParams.set(`line_items[${lineItemIndex}][quantity]`, selection.familyQty.toString());
+        lineItemIndex++;
+      }
+    });
 
     lineItemsParams.set(`line_items[${lineItemIndex}][price_data][currency]`, 'usd');
     lineItemsParams.set(`line_items[${lineItemIndex}][price_data][product_data][name]`, 'Processing Fee');
@@ -102,12 +120,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     lineItemsParams.set(`line_items[${lineItemIndex}][quantity]`, '1');
 
     lineItemsParams.set('metadata[purchase_type]', 'general_admission');
-    lineItemsParams.set('metadata[game_id]', game.id);
-    lineItemsParams.set('metadata[game_opponent]', game.opponent);
-    lineItemsParams.set('metadata[customer_name]', `${customer.firstName} ${customer.lastName}`.trim());
+    lineItemsParams.set('metadata[game_count]', normalizedSelections.length.toString());
+    lineItemsParams.set('metadata[games]', normalizedSelections.map((selection) => selection.game.opponent).join(', '));
+    lineItemsParams.set('metadata[customer_name]', customer.name.trim());
     lineItemsParams.set('metadata[customer_phone]', customer.phone || '');
-    lineItemsParams.set('metadata[single_qty]', normalizedSingleQty.toString());
-    lineItemsParams.set('metadata[family_pack_qty]', normalizedFamilyQty.toString());
     lineItemsParams.set('metadata[total_tickets]', totalTickets.toString());
     lineItemsParams.set('metadata[total_amount]', totalAmount.toString());
 
@@ -129,17 +145,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     if (GHL_API_KEY) {
       try {
+        const [firstName, ...rest] = customer.name.trim().split(' ');
+        const lastName = rest.join(' ') || '-';
         const tags = [
           'Ticket Buyer',
           'Spartans Tickets',
           'General Admission',
           `${totalTickets} GA Tickets`,
-          game.opponent,
+          ...normalizedSelections.map((selection) => selection.game.opponent),
         ];
 
         const contactPayload = {
-          firstName: customer.firstName,
-          lastName: customer.lastName,
+          firstName: firstName || customer.name.trim(),
+          lastName,
           email: customer.email,
           phone: customer.phone,
           locationId: GHL_LOCATION_ID,
