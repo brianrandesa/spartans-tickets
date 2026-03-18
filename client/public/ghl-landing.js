@@ -3,9 +3,9 @@
     var root = document.getElementById("ghl-full-bleed");
     if (!root) return;
 
-    var leadEndpoint = root.getAttribute("data-lead-endpoint") || "https://buy.getspartanstickets.com/api/lead-capture";
     var gaRedirectUrl = root.getAttribute("data-ga-url") || "https://buy.getspartanstickets.com/ga";
     var countdownTarget = root.getAttribute("data-countdown-target") || "2026-04-11T19:00:00-07:00";
+    var ghlFormId = root.getAttribute("data-ghl-form-id") || "VaNfiwVgltYzOfuVxRKt";
 
     var hamburger = document.getElementById("hamburger");
     var mobilePanel = document.getElementById("mobilePanel");
@@ -18,9 +18,7 @@
     var overlay = document.getElementById("overlay");
     var closePopup = document.getElementById("closePopup");
     var openButtons = document.querySelectorAll(".js-open");
-    var leadForm = document.getElementById("leadForm");
-    var submitBtn = document.getElementById("submitBtn");
-    var errorText = document.getElementById("errorText");
+    var hasRedirected = false;
 
     function openLeadPopup() {
       if (!overlay) return;
@@ -46,55 +44,44 @@
       });
     }
 
-    if (leadForm) {
-      leadForm.addEventListener("submit", function (e) {
-        e.preventDefault();
-        if (!submitBtn || !errorText) return;
-        errorText.textContent = "";
-
-        var ticketNameEl = document.getElementById("ticketName");
-        var emailEl = document.getElementById("email");
-        var phoneEl = document.getElementById("phone");
-
-        var ticketName = ticketNameEl && "value" in ticketNameEl ? ticketNameEl.value.trim() : "";
-        var email = emailEl && "value" in emailEl ? emailEl.value.trim() : "";
-        var phone = phoneEl && "value" in phoneEl ? phoneEl.value.trim() : "";
-
-        if (!ticketName || !email || !phone) {
-          errorText.textContent = "Please fill out name, email, and phone to continue.";
-          return;
-        }
-
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Saving...";
-
-        fetch(leadEndpoint, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name: ticketName,
-            email: email,
-            phone: phone,
-            source: "Homepage Popup"
-          })
-        })
-          .catch(function () {
-            // Keep funnel moving even if lead capture fails.
-          })
-          .finally(function () {
-            try {
-              sessionStorage.setItem("spartans-ga-lead", JSON.stringify({
-                ticketName: ticketName,
-                email: email,
-                phone: phone
-              }));
-            } catch (_err) {
-              // Ignore storage issues (private mode / sandbox).
-            }
-            window.location.href = gaRedirectUrl;
-          });
-      });
+    function maybeRedirectToBuyingPage(reason) {
+      if (hasRedirected) return;
+      hasRedirected = true;
+      if (reason) {
+        // Helpful for debugging in GHL preview console.
+        console.log("Redirecting to buying page:", reason);
+      }
+      window.location.href = gaRedirectUrl;
     }
+
+    // Listen for submit events from embedded GHL form iframe.
+    window.addEventListener("message", function (event) {
+      var data = event.data;
+      var text = "";
+
+      try {
+        if (typeof data === "string") {
+          text = data.toLowerCase();
+        } else if (data && typeof data === "object") {
+          text = JSON.stringify(data).toLowerCase();
+        }
+      } catch (_err) {
+        // Ignore non-serializable message payloads.
+      }
+
+      if (!text) return;
+
+      var mentionsForm = text.indexOf(ghlFormId.toLowerCase()) !== -1 || text.indexOf("form") !== -1;
+      var looksSubmitted =
+        text.indexOf("submitted") !== -1 ||
+        text.indexOf("submission") !== -1 ||
+        text.indexOf("success") !== -1 ||
+        text.indexOf("thank") !== -1;
+
+      if (mentionsForm && looksSubmitted) {
+        maybeRedirectToBuyingPage("GHL form submission message");
+      }
+    });
 
     var countdownEl = document.getElementById("countdownTime");
     if (countdownEl) {
@@ -115,6 +102,14 @@
 
       tickCountdown();
       window.setInterval(tickCountdown, 1000);
+    }
+
+    // Backup: if user clicks inside the form and then waits, keep them moving.
+    var formIframe = document.getElementById("inline-VaNfiwVgltYzOfuVxRKt");
+    if (formIframe) {
+      formIframe.addEventListener("load", function () {
+        // No-op; useful checkpoint for debugging.
+      });
     }
   }
 

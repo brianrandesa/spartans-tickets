@@ -77,14 +77,22 @@
     .modal h2 { margin: 0 0 8px; font-size: 32px; line-height: 1.05; }
     .modal .m-sub { margin: 0 0 6px; color: #d8e3ef; font-size: 14px; }
     .modal .m-price { margin: 0 0 14px; color: #22d3ee; font-weight: 700; font-size: 14px; }
-    .form { display: grid; gap: 10px; }
-    .label { display: block; font-size: 12px; color: #9aa8b8; margin-bottom: 4px; }
-    .input { width: 100%; background: #0a111a; color: #e8eef5; border: 1px solid #1f2937; border-radius: 10px; padding: 12px 13px; font-size: 14px; outline: none; }
-    .input:focus { border-color: #22d3ee; box-shadow: 0 0 0 2px rgba(34,211,238,.15); }
-    .error { min-height: 18px; color: #ef4444; font-size: 13px; }
-    .note { font-size: 12px; color: #7f8ea0; text-align: center; margin-top: 2px; }
-    .submit { width: 100%; padding: 13px 16px; }
-    .submit:disabled { opacity: .7; cursor: not-allowed; }
+    .ghl-form-wrap {
+      margin-top: 10px;
+      border: 1px solid #1f2937;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #0a111a;
+      min-height: 395px;
+    }
+    .ghl-form-wrap iframe {
+      width: 100%;
+      height: 395px;
+      border: none;
+      display: block;
+    }
+    .note { font-size: 12px; color: #7f8ea0; text-align: center; margin-top: 10px; }
+    .buy-link { color: #99f6ff; font-weight: 700; }
     @media (max-width: 980px) { .cards-3 { grid-template-columns: 1fr; } .logo-grid { grid-template-columns: repeat(3,minmax(0,1fr)); } .ticket-grid { grid-template-columns: 1fr; } .gallery-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
     @media (max-width: 840px) { .desktop-only, .nav { display: none; } .mobile-only { display: inline-flex; } .logo { width: 66px; height: 66px; } .hero p { font-size: 16px; } }
     @media (max-width: 560px) { .gallery-grid { grid-template-columns: 1fr; } .hero-meta { font-size: 20px; } }
@@ -93,8 +101,8 @@
 <body>
   <div
     id="ghl-full-bleed"
-    data-lead-endpoint="https://buy.getspartanstickets.com/api/lead-capture"
     data-ga-url="https://buy.getspartanstickets.com/ga"
+    data-ghl-form-id="VaNfiwVgltYzOfuVxRKt"
     data-countdown-target="2026-04-11T19:00:00-07:00"
   >
     <header class="header">
@@ -207,17 +215,35 @@
         <h2>General Admission Is Live</h2>
         <p class="m-sub">All tickets are now general admission. Buy fast and sit anywhere in the stadium.</p>
         <p class="m-price">Single GA: $35 • Family 4-Pack: $100</p>
-        <form id="leadForm" class="form">
-          <div><label class="label" for="ticketName">What name are we putting on these tickets? *</label><input class="input" id="ticketName" type="text" required placeholder="Full name" /></div>
-          <div><label class="label" for="email">Email *</label><input class="input" id="email" type="email" required placeholder="you@example.com" /></div>
-          <div><label class="label" for="phone">Phone *</label><input class="input" id="phone" type="tel" required placeholder="(555) 555-5555" /></div>
-          <div id="errorText" class="error"></div>
-          <p class="note">We will pre-fill your checkout details on the next page.</p>
-          <button id="submitBtn" class="btn btn-cyan submit" type="submit">Secure Your Ticket</button>
-        </form>
+        <div class="ghl-form-wrap">
+          <iframe
+            src="https://link.denver-leads.com/widget/form/VaNfiwVgltYzOfuVxRKt"
+            id="inline-VaNfiwVgltYzOfuVxRKt"
+            data-layout="{'id':'INLINE'}"
+            data-trigger-type="alwaysShow"
+            data-trigger-value=""
+            data-activation-type="alwaysActivated"
+            data-activation-value=""
+            data-deactivation-type="neverDeactivate"
+            data-deactivation-value=""
+            data-form-name="New CoSpartans Opt in Form (LIVE)"
+            data-height="395"
+            data-layout-iframe-id="inline-VaNfiwVgltYzOfuVxRKt"
+            data-form-id="VaNfiwVgltYzOfuVxRKt"
+            title="New CoSpartans Opt in Form (LIVE)"
+          ></iframe>
+        </div>
+        <p class="note">
+          After submit you will be sent to:
+          <a class="buy-link" href="https://buy.getspartanstickets.com/ga" target="_blank" rel="noopener">buy.getspartanstickets.com/ga</a>
+        </p>
+        <div style="display:flex;justify-content:center;margin-top:10px;">
+          <a class="btn btn-cyan btn-sm" href="https://buy.getspartanstickets.com/ga" target="_blank" rel="noopener">Go To Buying Page</a>
+        </div>
       </div>
     </div>
   </div>
+  <script src="https://link.denver-leads.com/js/form_embed.js"></script>
   <script src="https://buy.getspartanstickets.com/ghl-landing.js" defer></script>
 </body>
 </html>
