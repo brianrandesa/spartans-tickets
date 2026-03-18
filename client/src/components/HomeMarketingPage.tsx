@@ -126,9 +126,7 @@ export function HomeMarketingPage({ onOpenSalesPopup }: HomeMarketingPageProps) 
       <main className="text-center">
         <section className="w-full min-h-[calc(100vh-88px)] py-8 border-b border-gray-900 flex items-start" style={heroStyle}>
           <div className="max-w-4xl mx-auto w-full px-4">
-            <h1 className="text-3xl md:text-5xl font-black leading-tight">
-              Official Season Opener: Pro Arena Football Is Back In Denver
-            </h1>
+            <h1 className="text-3xl md:text-5xl font-black leading-tight">Pro Arena Football Is Back In Denver</h1>
             <div className="mt-4 max-w-3xl mx-auto">
               <iframe
                 src={VIDEO_SLOTS[0].embedUrl}
