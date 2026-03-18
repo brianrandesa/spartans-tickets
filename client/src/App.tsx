@@ -8,6 +8,7 @@ function App() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [adminError, setAdminError] = useState('');
   const [showGaPopup, setShowGaPopup] = useState(false);
+  const [leadSubmitting, setLeadSubmitting] = useState(false);
   const [leadData, setLeadData] = useState({
     ticketName: '',
     email: '',
@@ -119,16 +120,34 @@ function App() {
               Single GA: $35 • Family 4-Pack: $100
             </p>
             <form
-              onSubmit={(e) => {
+              onSubmit={async (e) => {
                 e.preventDefault();
+                if (leadSubmitting) return;
                 if (!leadData.ticketName || !leadData.email || !leadData.phone) {
                   setLeadError('Please fill out name, email, and phone to continue.');
                   return;
                 }
 
-                sessionStorage.setItem('spartans-ga-lead', JSON.stringify(leadData));
+                setLeadSubmitting(true);
                 setLeadError('');
-                window.location.href = '/ga';
+
+                try {
+                  await fetch('/api/lead-capture', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      name: leadData.ticketName,
+                      email: leadData.email,
+                      phone: leadData.phone,
+                      source: 'Homepage Popup',
+                    }),
+                  });
+                } catch (error) {
+                  console.error('Lead capture request failed:', error);
+                } finally {
+                  sessionStorage.setItem('spartans-ga-lead', JSON.stringify(leadData));
+                  window.location.href = '/ga';
+                }
               }}
               className="space-y-3"
             >
@@ -168,9 +187,10 @@ function App() {
               <div className="flex flex-wrap gap-3 justify-center pt-1">
                 <button
                   type="submit"
+                  disabled={leadSubmitting}
                   className="px-6 py-3 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-black font-bold transition-colors"
                 >
-                  Secure Your Ticket
+                  {leadSubmitting ? 'Saving...' : 'Secure Your Ticket'}
                 </button>
               </div>
             </form>
