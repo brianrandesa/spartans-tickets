@@ -57,6 +57,7 @@ const PARTNER_LOGOS = [
 
 export function HomeMarketingPage({ onOpenSalesPopup }: HomeMarketingPageProps) {
   const [remainingSeconds, setRemainingSeconds] = useState(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const updateCountdown = () => {
@@ -91,17 +92,11 @@ export function HomeMarketingPage({ onOpenSalesPopup }: HomeMarketingPageProps) 
   return (
     <div className="min-h-screen bg-black text-white pb-24">
       <header className="border-b border-gray-900 bg-black/70 backdrop-blur-sm">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between gap-4 flex-wrap">
+        <div className="container mx-auto px-4 py-3 flex items-center justify-between gap-3">
           <div className="flex items-center">
             <img src="/spartans-logo.png" alt="Colorado Spartans" className="w-20 h-20 object-contain" />
           </div>
-          <nav className="flex flex-wrap gap-4 text-sm items-center justify-center">
-            <button
-              onClick={onOpenSalesPopup}
-              className="text-gray-300 hover:text-cyan-300 transition-colors"
-            >
-              Secure Your Ticket
-            </button>
+          <nav className="hidden md:flex flex-wrap gap-4 text-sm items-center justify-center">
             {TOP_LINKS.map((link) => (
               <a
                 key={link.label}
@@ -116,11 +111,48 @@ export function HomeMarketingPage({ onOpenSalesPopup }: HomeMarketingPageProps) 
           </nav>
           <button
             onClick={onOpenSalesPopup}
-            className="bg-cyan-500 hover:bg-cyan-400 text-black font-bold px-5 py-2 rounded-lg transition"
+            className="hidden md:inline-flex bg-cyan-500 hover:bg-cyan-400 text-black font-bold px-5 py-2 rounded-lg transition"
           >
             Secure Your Ticket
           </button>
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen((prev) => !prev)}
+            className="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg border border-gray-700 text-gray-200"
+            aria-label="Toggle menu"
+            aria-expanded={mobileMenuOpen}
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
         </div>
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-gray-800 bg-black/90">
+            <div className="container mx-auto px-4 py-4 flex flex-col gap-3">
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onOpenSalesPopup();
+                }}
+                className="w-full bg-cyan-500 hover:bg-cyan-400 text-black font-bold px-5 py-2 rounded-lg transition"
+              >
+                Secure Your Ticket
+              </button>
+              {TOP_LINKS.map((link) => (
+                <a
+                  key={`mobile-${link.label}`}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-300 hover:text-cyan-300 transition-colors text-sm py-1"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
       </header>
 
       <main className="text-center">
