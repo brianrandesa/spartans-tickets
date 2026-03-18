@@ -128,25 +128,12 @@ export function GASalesPage({ onBackToHome }: GASalesPageProps) {
             </div>
 
             <div className="bg-gray-950 rounded-xl border border-gray-800 p-6">
-              <h2 className="text-xl font-bold mb-3">Arena Access</h2>
+              <h2 className="text-xl font-bold mb-3">How GA Seating Works</h2>
               <p className="text-gray-300">
                 This event is <span className="text-cyan-400 font-bold">general admission</span>. You are not locked
                 into a specific section or seat.
               </p>
-              <p className="text-gray-400 mt-2">Use this seating chart as a visual guide. Entry is first-come, first-served.</p>
-              <div className="mt-5 rounded-lg border border-gray-700 bg-gray-900 p-4">
-                <svg viewBox="0 0 440 260" className="w-full">
-                  <ellipse cx="220" cy="130" rx="185" ry="105" fill="none" stroke="#164e63" strokeWidth="2" />
-                  <ellipse cx="220" cy="130" rx="135" ry="75" fill="none" stroke="#155e75" strokeWidth="2" />
-                  <rect x="145" y="95" width="150" height="70" rx="10" fill="#166534" stroke="#22c55e" strokeWidth="2" />
-                  <text x="220" y="136" textAnchor="middle" fill="#ffffff" fontSize="16" fontWeight="700">
-                    FIELD
-                  </text>
-                  <text x="220" y="24" textAnchor="middle" fill="#22d3ee" fontSize="12">
-                    GENERAL ADMISSION - SIT ANYWHERE
-                  </text>
-                </svg>
-              </div>
+              <p className="text-gray-400 mt-2">Entry is first-come, first-served. Arrive early for the best seat location.</p>
             </div>
 
             <div className="bg-cyan-500/10 border border-cyan-500/30 rounded-xl p-6">
