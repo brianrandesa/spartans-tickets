@@ -101,6 +101,14 @@ export function HomeMarketingPage({ onOpenSalesPopup }: HomeMarketingPageProps) 
             <h1 className="text-4xl md:text-6xl font-black leading-tight mt-4">
               Pro Arena Football Is Back In Denver
             </h1>
+            <div className="mt-7 max-w-3xl mx-auto rounded-xl border border-gray-800 bg-gray-950 p-4">
+              <iframe
+                src={VIDEO_SLOTS[0].embedUrl}
+                title={VIDEO_SLOTS[0].title}
+                className="w-full aspect-video rounded-lg"
+                allowFullScreen
+              />
+            </div>
             <p className="text-xl text-gray-300 mt-6">
               {GAME_DATE} • {VENUE}
             </p>
@@ -124,28 +132,6 @@ export function HomeMarketingPage({ onOpenSalesPopup }: HomeMarketingPageProps) 
                 Visit Main Team Site
               </a>
             </div>
-          </div>
-        </section>
-
-        <section className="container mx-auto px-4 py-14">
-          <div className="max-w-3xl mb-7 mx-auto">
-            <p className="text-cyan-400 uppercase tracking-[0.2em] font-semibold text-sm">Video Highlights</p>
-            <h2 className="text-3xl font-black mt-3">Featured Video</h2>
-            <p className="text-gray-300 mt-3">Your homepage now shows one featured video only.</p>
-          </div>
-          <div className="max-w-3xl mx-auto">
-            {VIDEO_SLOTS.map((slot) => (
-              <div key={slot.id} className="rounded-xl border border-gray-800 bg-gray-950 p-4">
-                {slot.embedUrl ? (
-                  <iframe
-                    src={slot.embedUrl}
-                    title={slot.title}
-                    className="w-full aspect-video rounded-lg"
-                    allowFullScreen
-                  />
-                ) : null}
-              </div>
-            ))}
           </div>
         </section>
 
