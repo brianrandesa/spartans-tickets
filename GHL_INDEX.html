@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Colorado Spartans Tickets</title>
+  <style>
+    html, body { margin: 0 !important; padding: 0 !important; width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; background: #000 !important; }
+    #ghl-full-bleed { width: 100vw !important; margin-left: calc(50% - 50vw) !important; margin-right: calc(50% - 50vw) !important; background: #000 !important; color: #f3f6fb; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
+    .c-section, .c-row, .c-column, .c-wrapper, .inner, .hl_page-preview--content { max-width: 100% !important; background: transparent !important; }
+    * { box-sizing: border-box; }
+    a { text-decoration: none; color: inherit; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+    .header { position: sticky; top: 0; z-index: 50; background: rgba(0,0,0,.75); backdrop-filter: blur(8px); border-bottom: 1px solid #111827; }
+    .header-row { min-height: 78px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .logo { width: 82px; height: 82px; object-fit: contain; }
+    .nav { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+    .nav a { font-size: 14px; color: #d0dae6; }
+    .nav a:hover { color: #99f6ff; }
+    .btn { border: 0; border-radius: 10px; cursor: pointer; font-weight: 800; transition: .2s ease; display: inline-flex; align-items: center; justify-content: center; }
+    .btn-cyan { background: #22d3ee; color: #001018; }
+    .btn-cyan:hover { background: #06b6d4; }
+    .btn-outline { border: 1px solid rgba(34,211,238,.6); color: #99f6ff; background: transparent; }
+    .btn-outline:hover { background: #22d3ee; color: #001018; }
+    .btn-sm { padding: 10px 14px; font-size: 14px; }
+    .btn-md { padding: 12px 18px; font-size: 15px; }
+    .btn-lg { padding: 14px 22px; font-size: 16px; }
+    .desktop-only { display: inline-flex; }
+    .mobile-only { display: none; }
+    .hamburger { width: 40px; height: 40px; border-radius: 10px; border: 1px solid #374151; background: transparent; color: #e5edf7; font-size: 20px; line-height: 1; }
+    .mobile-panel { display: none; border-top: 1px solid #1f2937; background: rgba(0,0,0,.92); padding: 12px 16px 14px; }
+    .mobile-panel.open { display: block; }
+    .mobile-links { display: flex; flex-direction: column; gap: 10px; }
+    .mobile-links a { font-size: 14px; color: #d0dae6; }
+    .mobile-links a:hover { color: #99f6ff; }
+    .hero { min-height: 68vh; display: flex; align-items: center; border-bottom: 1px solid #111827; background-image: linear-gradient(rgba(0,0,0,.72), rgba(0,0,0,.82)), url('https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/UIgZIZySfnBryLV4WWIh/media/6994af936bac2409e00d08f1.jpeg'); background-size: 100% 100%; background-position: center top; padding: 32px 0; text-align: center; }
+    .hero h1 { margin: 0; font-size: clamp(28px,5vw,56px); line-height: 1.06; font-weight: 900; }
+    .hero-video { margin: 16px auto 0; max-width: 850px; aspect-ratio: 16/9; width: 100%; border-radius: 12px; overflow: hidden; }
+    .hero-video iframe { width: 100%; height: 100%; border: 0; }
+    .hero-meta { margin: 14px 0 0; font-size: 24px; font-weight: 700; color: #dbe6f4; line-height: 1.3; }
+    .hero p { margin: 12px auto 0; max-width: 900px; color: #d3deea; font-size: 18px; line-height: 1.45; }
+    .hero-actions { margin-top: 18px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+    .section { padding: 56px 0; }
+    .section-dark { border-top: 1px solid #111827; border-bottom: 1px solid #111827; background-image: linear-gradient(rgba(0,0,0,.78), rgba(0,0,0,.9)), url('https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/UIgZIZySfnBryLV4WWIh/media/696829b8cafecf588bc1b1e8.jpg'); background-size: cover; background-position: center; }
+    .eyebrow { margin: 0 0 8px; color: #22d3ee; text-transform: uppercase; letter-spacing: .2em; font-size: 12px; font-weight: 700; text-align: center; }
+    .title { margin: 0; text-align: center; font-size: clamp(28px,4vw,48px); font-weight: 900; }
+    .sub { margin: 10px auto 0; text-align: center; color: #c6d3e2; max-width: 850px; font-size: 17px; }
+    .cards-3 { margin-top: 24px; display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px; }
+    .card { border: 1px solid #1f2937; border-radius: 14px; padding: 18px; background: rgba(0,0,0,.35); }
+    .card h3 { margin: 0; color: #94f8ff; font-size: 20px; }
+    .card p { margin: 10px 0 0; color: #d2deeb; line-height: 1.4; }
+    .logo-grid { margin-top: 18px; display: grid; grid-template-columns: repeat(6,minmax(0,1fr)); gap: 12px; }
+    .logo-box { border: 1px solid #1f2937; border-radius: 10px; background: #090d12; padding: 10px; display: flex; align-items: center; justify-content: center; min-height: 74px; }
+    .logo-box img { max-height: 40px; max-width: 100%; object-fit: contain; }
+    .ticket-grid { margin-top: 22px; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; }
+    .ticket { border-radius: 14px; padding: 18px; border: 1px solid rgba(34,211,238,.35); background: rgba(34,211,238,.09); }
+    .ticket.family { border-color: rgba(52,211,153,.35); background: rgba(52,211,153,.10); }
+    .ticket .kicker { text-transform: uppercase; letter-spacing: .12em; font-size: 11px; font-weight: 700; color: #9ff5ff; }
+    .ticket.family .kicker { color: #9ff5d0; }
+    .ticket .price { margin: 8px 0 0; font-size: 44px; line-height: 1; font-weight: 900; }
+    .ticket ul { margin: 12px 0 0; padding-left: 18px; color: #d4e0ed; line-height: 1.5; }
+    .cta-row { margin-top: 22px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+    .gallery-grid { margin-top: 18px; display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 14px; }
+    .gallery-card { border: 1px solid #1f2937; border-radius: 12px; overflow: hidden; background: #070b11; }
+    .gallery-card img { width: 100%; height: 170px; object-fit: cover; display: block; }
+    .gallery-card .cap { padding: 10px; text-align: center; color: #d3dfec; font-size: 14px; }
+    footer { border-top: 1px solid #111827; padding: 24px 0 98px; text-align: center; color: #97a7b8; }
+    .countdown { position: fixed; left: 0; right: 0; bottom: 0; z-index: 45; border-top: 1px solid rgba(34,211,238,.35); background: rgba(0,0,0,.9); backdrop-filter: blur(8px); }
+    .count-row { min-height: 72px; display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; padding: 10px 16px; }
+    .count-label { text-transform: uppercase; letter-spacing: .18em; color: #8ef5ff; font-size: 11px; font-weight: 700; text-align: center; }
+    .count-time { margin-top: 3px; font-size: clamp(18px,2.6vw,28px); font-weight: 900; color: #fff; text-align: center; }
+    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.8); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; padding: 16px; z-index: 99; }
+    .overlay.open { display: flex; }
+    .modal { width: 100%; max-width: 520px; position: relative; background: linear-gradient(180deg,#0e141d 0%,#070b11 100%); border: 1px solid rgba(34,211,238,.35); border-radius: 18px; padding: 22px; box-shadow: 0 20px 60px rgba(0,0,0,.5), 0 0 30px rgba(34,211,238,.12); }
+    .close { position: absolute; top: 10px; right: 10px; width: 34px; height: 34px; border-radius: 999px; border: 1px solid #1f2937; background: transparent; color: #c9d4e2; font-size: 20px; cursor: pointer; }
+    .pill { display: inline-block; border: 1px solid rgba(34,211,238,.35); background: rgba(34,211,238,.1); color: #99f6ff; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; border-radius: 999px; padding: 6px 10px; margin-bottom: 10px; }
+    .modal h2 { margin: 0 0 8px; font-size: 32px; line-height: 1.05; }
+    .modal .m-sub { margin: 0 0 6px; color: #d8e3ef; font-size: 14px; }
+    .modal .m-price { margin: 0 0 14px; color: #22d3ee; font-weight: 700; font-size: 14px; }
+    .form { display: grid; gap: 10px; }
+    .label { display: block; font-size: 12px; color: #9aa8b8; margin-bottom: 4px; }
+    .input { width: 100%; background: #0a111a; color: #e8eef5; border: 1px solid #1f2937; border-radius: 10px; padding: 12px 13px; font-size: 14px; outline: none; }
+    .input:focus { border-color: #22d3ee; box-shadow: 0 0 0 2px rgba(34,211,238,.15); }
+    .error { min-height: 18px; color: #ef4444; font-size: 13px; }
+    .note { font-size: 12px; color: #7f8ea0; text-align: center; margin-top: 2px; }
+    .submit { width: 100%; padding: 13px 16px; }
+    .submit:disabled { opacity: .7; cursor: not-allowed; }
+    @media (max-width: 980px) { .cards-3 { grid-template-columns: 1fr; } .logo-grid { grid-template-columns: repeat(3,minmax(0,1fr)); } .ticket-grid { grid-template-columns: 1fr; } .gallery-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+    @media (max-width: 840px) { .desktop-only, .nav { display: none; } .mobile-only { display: inline-flex; } .logo { width: 66px; height: 66px; } .hero p { font-size: 16px; } }
+    @media (max-width: 560px) { .gallery-grid { grid-template-columns: 1fr; } .hero-meta { font-size: 20px; } }
+  </style>
+</head>
+<body>
+  <div
+    id="ghl-full-bleed"
+    data-lead-endpoint="https://buy.getspartanstickets.com/api/lead-capture"
+    data-ga-url="https://buy.getspartanstickets.com/ga"
+    data-countdown-target="2026-04-11T19:00:00-07:00"
+  >
+    <header class="header">
+      <div class="container header-row">
+        <img class="logo" src="https://buy.getspartanstickets.com/spartans-logo.png" alt="Colorado Spartans" />
+        <nav class="nav">
+          <a href="https://www.tickettailor.com/events/coloradospartans/1934702" target="_blank" rel="noopener">Season Tickets</a>
+          <a href="https://shopcoloradospartans.com/" target="_blank" rel="noopener">Store</a>
+          <a href="https://www.co-spartans.com/schedule" target="_blank" rel="noopener">Schedule</a>
+          <a href="https://www.co-spartans.com/partners" target="_blank" rel="noopener">Our Partners</a>
+          <a href="https://www.co-spartans.com/about-us" target="_blank" rel="noopener">About Us</a>
+        </nav>
+        <button class="btn btn-cyan btn-sm desktop-only js-open">Secure Your Ticket</button>
+        <button class="hamburger mobile-only" id="hamburger" aria-label="Toggle menu">☰</button>
+      </div>
+      <div id="mobilePanel" class="mobile-panel">
+        <div class="mobile-links container">
+          <button class="btn btn-cyan btn-sm js-open" style="width:100%;">Secure Your Ticket</button>
+          <a href="https://www.tickettailor.com/events/coloradospartans/1934702" target="_blank" rel="noopener">Season Tickets</a>
+          <a href="https://shopcoloradospartans.com/" target="_blank" rel="noopener">Store</a>
+          <a href="https://www.co-spartans.com/schedule" target="_blank" rel="noopener">Schedule</a>
+          <a href="https://www.co-spartans.com/partners" target="_blank" rel="noopener">Our Partners</a>
+          <a href="https://www.co-spartans.com/about-us" target="_blank" rel="noopener">About Us</a>
+        </div>
+      </div>
+    </header>
+    <main>
+      <section class="hero">
+        <div class="container">
+          <h1>Pro Arena Football Is Back In Denver</h1>
+          <div class="hero-video">
+            <iframe src="https://player.vimeo.com/video/1121057331?autoplay=1&muted=1&controls=1&autopause=0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="Feature Video"></iframe>
+          </div>
+          <div class="hero-meta">Sunday, May 10th at 2:00 PM • Denver Coliseum</div>
+          <p>Fast, hard-hitting arena football, huge energy, and one simple ticket model: general admission. Buy once, sit anywhere in the stadium, and enjoy game day your way.</p>
+          <div class="hero-actions"><button class="btn btn-cyan btn-lg js-open">Secure Your Ticket</button></div>
+        </div>
+      </section>
+      <section class="section section-dark">
+        <div class="container">
+          <h2 class="title">What Is Waiting For You On Game Day</h2>
+          <div class="cards-3">
+            <div class="card"><h3>Bone-Crushing Arena Football</h3><p>Full-contact action with explosive drives, big hits, and nonstop intensity.</p></div>
+            <div class="card"><h3>Special Guest Appearances</h3><p>Featured appearances and fan experiences throughout the season.</p></div>
+            <div class="card"><h3>The Greatest Show Indoors</h3><p>Kickoff-to-final-whistle entertainment built for families, fans, and groups.</p></div>
+          </div>
+        </div>
+      </section>
+      <section class="section">
+        <div class="container">
+          <p class="eyebrow">Partners And Features</p>
+          <div class="logo-grid">
+            <div class="logo-box"><img src="https://storage.googleapis.com/msgsndr/UIgZIZySfnBryLV4WWIh/media/e505937a-1009-41cd-9a73-214ff54b2d33.png" alt=""></div>
+            <div class="logo-box"><img src="https://storage.googleapis.com/msgsndr/UIgZIZySfnBryLV4WWIh/media/690491506bade613f3325a79.png" alt=""></div>
+            <div class="logo-box"><img src="https://storage.googleapis.com/msgsndr/UIgZIZySfnBryLV4WWIh/media/6903f5cac3f8ca4abea2219c.png" alt=""></div>
+            <div class="logo-box"><img src="https://storage.googleapis.com/msgsndr/UIgZIZySfnBryLV4WWIh/media/9898ea82-65e1-489c-af7a-fc9d1a38d76e.png" alt=""></div>
+            <div class="logo-box"><img src="https://storage.googleapis.com/msgsndr/UIgZIZySfnBryLV4WWIh/media/6904bd309faf01f0713e7ba5.png" alt=""></div>
+            <div class="logo-box"><img src="https://storage.googleapis.com/msgsndr/UIgZIZySfnBryLV4WWIh/media/6904bc2c9faf018d493e5e70.png" alt=""></div>
+          </div>
+        </div>
+      </section>
+      <section class="section">
+        <div class="container">
+          <p class="eyebrow">Enter The Stadium</p>
+          <h2 class="title">Choose The Ticket Option That Fits Your Night</h2>
+          <p class="sub">We are making entry simple and fast with general admission options built for individuals and families.</p>
+          <div class="ticket-grid">
+            <div class="ticket">
+              <div class="kicker">General Admission</div>
+              <div class="price">$35</div>
+              <ul><li>Single ticket access</li><li>Sit anywhere in the stadium</li><li>Fast mobile checkout</li><li>Instant confirmation after payment</li></ul>
+            </div>
+            <div class="ticket family">
+              <div class="kicker">Family Four Pack</div>
+              <div class="price">$100</div>
+              <ul><li>Four tickets bundled together</li><li>Best value for families and groups</li><li>Same general admission access</li><li>One quick checkout for the whole pack</li></ul>
+            </div>
+          </div>
+          <div class="cta-row">
+            <button class="btn btn-cyan btn-lg js-open">Secure Your Ticket</button>
+            <a class="btn btn-outline btn-lg" href="https://www.tickettailor.com/events/coloradospartans/1934702" target="_blank" rel="noopener">Buy Season Tickets</a>
+          </div>
+        </div>
+      </section>
+      <section class="section">
+        <div class="container">
+          <p class="eyebrow">Shields Up</p>
+          <h2 class="title">Game Day Highlights</h2>
+          <p class="sub">Experience the energy, family atmosphere, and nonstop action at Colorado Spartans home games.</p>
+          <div class="gallery-grid">
+            <div class="gallery-card"><img src="https://assets.cdn.filesafe.space/UIgZIZySfnBryLV4WWIh/media/69681c6b8c58e85abbc51806.jpg" alt="General Admission"><div class="cap">General Admission</div></div>
+            <div class="gallery-card"><img src="https://assets.cdn.filesafe.space/UIgZIZySfnBryLV4WWIh/media/69681c6b3a2f0f26d60bbffc.jpg" alt="Group Tickets"><div class="cap">Group Tickets</div></div>
+            <div class="gallery-card"><img src="https://assets.cdn.filesafe.space/UIgZIZySfnBryLV4WWIh/media/69681adf8c58e8f43fc4e4ce.jpg" alt="Family Four Pack"><div class="cap">Family Four Pack</div></div>
+            <div class="gallery-card"><img src="https://assets.cdn.filesafe.space/UIgZIZySfnBryLV4WWIh/media/69681adf8ed9370112025705.jpg" alt="Season Tickets"><div class="cap">Season Tickets</div></div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer><div class="container"><div>Colorado Spartans • Denver Coliseum</div><div style="margin-top:4px;font-size:13px;">General Admission Ticketing Experience • 2026</div></div></footer>
+    <div class="countdown">
+      <div class="container count-row">
+        <div><div class="count-label">First Home Game</div><div id="countdownTime" class="count-time">00d : 00h : 00m : 00s</div></div>
+        <button class="btn btn-cyan btn-md js-open">Secure Your Ticket</button>
+      </div>
+    </div>
+    <div id="overlay" class="overlay">
+      <div class="modal">
+        <button class="close" id="closePopup" aria-label="Close">×</button>
+        <div class="pill">Secure Your Seats</div>
+        <h2>General Admission Is Live</h2>
+        <p class="m-sub">All tickets are now general admission. Buy fast and sit anywhere in the stadium.</p>
+        <p class="m-price">Single GA: $35 • Family 4-Pack: $100</p>
+        <form id="leadForm" class="form">
+          <div><label class="label" for="ticketName">What name are we putting on these tickets? *</label><input class="input" id="ticketName" type="text" required placeholder="Full name" /></div>
+          <div><label class="label" for="email">Email *</label><input class="input" id="email" type="email" required placeholder="you@example.com" /></div>
+          <div><label class="label" for="phone">Phone *</label><input class="input" id="phone" type="tel" required placeholder="(555) 555-5555" /></div>
+          <div id="errorText" class="error"></div>
+          <p class="note">We will pre-fill your checkout details on the next page.</p>
+          <button id="submitBtn" class="btn btn-cyan submit" type="submit">Secure Your Ticket</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script src="https://buy.getspartanstickets.com/ghl-landing.js" defer></script>
+</body>
+</html>
