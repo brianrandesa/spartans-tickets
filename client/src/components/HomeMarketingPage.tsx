@@ -1,3 +1,5 @@
+import { useEffect, useMemo, useState } from 'react';
+
 interface HomeMarketingPageProps {
   onOpenSalesPopup: () => void;
 }
@@ -7,6 +9,7 @@ const VENUE = 'Denver Coliseum';
 const HERO_BACKGROUND_IMAGE = 'https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/UIgZIZySfnBryLV4WWIh/media/6994af936bac2409e00d08f1.jpeg';
 const MIDDLE_BACKGROUND_IMAGE = 'https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/UIgZIZySfnBryLV4WWIh/media/696829b8cafecf588bc1b1e8.jpg';
 const DEFAULT_HERO_VIDEO = 'https://player.vimeo.com/video/1121057331?app_id=122963&autoplay=0&controls=1';
+const FIRST_HOME_GAME_ISO = '2026-04-11T19:00:00';
 
 const TOP_LINKS = [
   { label: 'Spartan Club', href: 'https://www.tickettailor.com/events/coloradospartans/1934702' },
@@ -53,6 +56,30 @@ const PARTNER_LOGOS = [
 ];
 
 export function HomeMarketingPage({ onOpenSalesPopup }: HomeMarketingPageProps) {
+  const [remainingSeconds, setRemainingSeconds] = useState(0);
+
+  useEffect(() => {
+    const updateCountdown = () => {
+      const now = Date.now();
+      const target = new Date(FIRST_HOME_GAME_ISO).getTime();
+      setRemainingSeconds(Math.max(0, Math.floor((target - now) / 1000)));
+    };
+
+    updateCountdown();
+    const intervalId = window.setInterval(updateCountdown, 1000);
+    return () => window.clearInterval(intervalId);
+  }, []);
+
+  const countdownLabel = useMemo(() => {
+    const days = Math.floor(remainingSeconds / 86400);
+    const hours = Math.floor((remainingSeconds % 86400) / 3600);
+    const minutes = Math.floor((remainingSeconds % 3600) / 60);
+    const seconds = remainingSeconds % 60;
+
+    const pad = (value: number) => value.toString().padStart(2, '0');
+    return `${pad(days)}d : ${pad(hours)}h : ${pad(minutes)}m : ${pad(seconds)}s`;
+  }, [remainingSeconds]);
+
   const heroStyle = HERO_BACKGROUND_IMAGE
     ? {
         backgroundImage: `linear-gradient(rgba(0,0,0,0.72), rgba(0,0,0,0.82)), url(${HERO_BACKGROUND_IMAGE})`,
@@ -62,17 +89,13 @@ export function HomeMarketingPage({ onOpenSalesPopup }: HomeMarketingPageProps) 
     : undefined;
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <header className="border-b border-gray-900">
-        <div className="container mx-auto px-4 py-5 flex items-center justify-center gap-4 flex-wrap text-center">
-          <div className="flex items-center justify-center gap-3 w-full">
-            <img src="/spartans-logo.png" alt="Colorado Spartans" className="w-12 h-12 object-contain" />
-            <div>
-              <p className="text-cyan-400 text-xl font-black tracking-wide">COLORADO SPARTANS</p>
-              <p className="text-sm text-gray-400">{VENUE} • 2026 Season</p>
-            </div>
+    <div className="min-h-screen bg-black text-white pb-24">
+      <header className="border-b border-gray-900 bg-black/70 backdrop-blur-sm">
+        <div className="container mx-auto px-4 py-3 flex items-center justify-between gap-4 flex-wrap">
+          <div className="flex items-center">
+            <img src="/spartans-logo.png" alt="Colorado Spartans" className="w-20 h-20 object-contain" />
           </div>
-          <nav className="flex flex-wrap gap-4 text-sm items-center justify-center w-full">
+          <nav className="flex flex-wrap gap-4 text-sm items-center justify-center">
             <button
               onClick={onOpenSalesPopup}
               className="text-gray-300 hover:text-cyan-300 transition-colors"
@@ -91,17 +114,22 @@ export function HomeMarketingPage({ onOpenSalesPopup }: HomeMarketingPageProps) 
               </a>
             ))}
           </nav>
+          <button
+            onClick={onOpenSalesPopup}
+            className="bg-cyan-500 hover:bg-cyan-400 text-black font-bold px-5 py-2 rounded-lg transition"
+          >
+            Secure Your Ticket
+          </button>
         </div>
       </header>
 
       <main className="text-center">
-        <section className="w-full min-h-[calc(100vh-88px)] py-14 border-b border-gray-900 flex items-center" style={heroStyle}>
+        <section className="w-full min-h-[calc(100vh-88px)] py-8 border-b border-gray-900 flex items-start" style={heroStyle}>
           <div className="max-w-4xl mx-auto w-full px-4">
-            <p className="text-cyan-400 uppercase tracking-[0.2em] font-semibold text-sm">Join Us For The Official Season Opener</p>
-            <h1 className="text-4xl md:text-6xl font-black leading-tight mt-4">
-              Pro Arena Football Is Back In Denver
+            <h1 className="text-3xl md:text-5xl font-black leading-tight">
+              Official Season Opener: Pro Arena Football Is Back In Denver
             </h1>
-            <div className="mt-7 max-w-3xl mx-auto">
+            <div className="mt-4 max-w-3xl mx-auto">
               <iframe
                 src={VIDEO_SLOTS[0].embedUrl}
                 title={VIDEO_SLOTS[0].title}
@@ -109,28 +137,20 @@ export function HomeMarketingPage({ onOpenSalesPopup }: HomeMarketingPageProps) 
                 allowFullScreen
               />
             </div>
-            <p className="text-xl text-gray-300 mt-6">
+            <p className="text-xl text-gray-300 mt-4">
               {GAME_DATE} • {VENUE}
             </p>
-            <p className="text-gray-300 mt-5 max-w-3xl mx-auto">
+            <p className="text-gray-300 mt-3 max-w-3xl mx-auto">
               Fast, hard-hitting arena football, huge energy, and one simple ticket model: general admission. Buy once,
               sit anywhere in the stadium, and enjoy game day your way.
             </p>
-            <div className="flex flex-wrap gap-4 mt-8 justify-center">
+            <div className="flex flex-wrap gap-4 mt-5 justify-center">
               <button
                 onClick={onOpenSalesPopup}
                 className="bg-cyan-500 hover:bg-cyan-400 text-black font-bold px-7 py-3 rounded-lg transition"
               >
                 Secure Your Ticket Now
               </button>
-              <a
-                href="https://getspartanstickets.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="border border-cyan-500 text-cyan-300 hover:bg-cyan-500 hover:text-black font-semibold px-7 py-3 rounded-lg transition"
-              >
-                Visit Main Team Site
-              </a>
             </div>
           </div>
         </section>
@@ -185,12 +205,22 @@ export function HomeMarketingPage({ onOpenSalesPopup }: HomeMarketingPageProps) 
             <div className="rounded-xl border border-cyan-500/30 bg-cyan-500/10 p-6">
               <p className="text-cyan-300 uppercase tracking-widest text-xs font-semibold">General Admission</p>
               <h3 className="text-3xl font-black mt-2">$35</h3>
-              <p className="text-gray-300 mt-3">Single ticket • Sit anywhere in the stadium • Fast mobile checkout</p>
+              <ul className="text-gray-300 mt-3 text-left list-disc list-inside space-y-1">
+                <li>Single ticket access</li>
+                <li>Sit anywhere in the stadium</li>
+                <li>Fast mobile checkout</li>
+                <li>Instant confirmation after payment</li>
+              </ul>
             </div>
             <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-6">
               <p className="text-emerald-300 uppercase tracking-widest text-xs font-semibold">Family Four Pack</p>
               <h3 className="text-3xl font-black mt-2">$100</h3>
-              <p className="text-gray-300 mt-3">4 tickets together • Best value for families • Same GA access</p>
+              <ul className="text-gray-300 mt-3 text-left list-disc list-inside space-y-1">
+                <li>Four tickets bundled together</li>
+                <li>Best value for families and groups</li>
+                <li>Same general admission access</li>
+                <li>One quick checkout for the whole pack</li>
+              </ul>
             </div>
           </div>
           <div className="mt-8 flex justify-center">
@@ -198,7 +228,7 @@ export function HomeMarketingPage({ onOpenSalesPopup }: HomeMarketingPageProps) 
               onClick={onOpenSalesPopup}
               className="bg-cyan-500 hover:bg-cyan-400 text-black font-bold px-8 py-4 rounded-lg transition text-lg"
             >
-              Continue To Ticket Checkout
+              Secure Tickets
             </button>
           </div>
         </section>
@@ -232,6 +262,13 @@ export function HomeMarketingPage({ onOpenSalesPopup }: HomeMarketingPageProps) 
           <p className="text-sm mt-1">General Admission Ticketing Experience • 2026</p>
         </div>
       </footer>
+
+      <div className="fixed bottom-0 inset-x-0 z-40 border-t border-cyan-500/30 bg-black/90 backdrop-blur-sm">
+        <div className="container mx-auto px-4 py-3 text-center">
+          <p className="text-cyan-300 text-sm font-semibold uppercase tracking-[0.18em]">First Home Game</p>
+          <p className="text-white text-lg md:text-2xl font-black">{countdownLabel}</p>
+        </div>
+      </div>
     </div>
   );
 }

@@ -99,7 +99,15 @@ function App() {
 
       {showGaPopup && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-xl rounded-2xl border border-cyan-400/40 bg-gradient-to-b from-gray-900 to-black shadow-[0_0_40px_rgba(34,211,238,0.18)] p-7 text-center">
+          <div className="relative w-full max-w-xl rounded-2xl border border-cyan-400/40 bg-gradient-to-b from-gray-900 to-black shadow-[0_0_40px_rgba(34,211,238,0.18)] p-7 text-center">
+            <button
+              type="button"
+              onClick={() => setShowGaPopup(false)}
+              className="absolute top-3 right-3 w-9 h-9 rounded-full border border-gray-700 text-gray-300 hover:text-white hover:border-cyan-400/50 hover:bg-gray-800 transition-colors"
+              aria-label="Close popup"
+            >
+              ×
+            </button>
             <div className="inline-flex items-center px-3 py-1 rounded-full border border-cyan-400/30 bg-cyan-500/10 text-cyan-300 text-xs font-semibold tracking-[0.18em] uppercase mb-4">
               Secure Your Seats
             </div>
@@ -159,17 +167,10 @@ function App() {
               <p className="text-xs text-gray-500 pt-1">We will pre-fill your checkout details on the next page.</p>
               <div className="flex flex-wrap gap-3 justify-center pt-1">
                 <button
-                  type="button"
-                  onClick={() => setShowGaPopup(false)}
-                  className="px-4 py-2 rounded-lg border border-gray-700 text-gray-300 hover:bg-gray-800 transition-colors"
-                >
-                  Stay on This Page
-                </button>
-                <button
                   type="submit"
-                  className="px-5 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-black font-bold transition-colors"
+                  className="px-6 py-3 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-black font-bold transition-colors"
                 >
-                  Continue to GA Sales Page
+                  Secure Your Ticket
                 </button>
               </div>
             </form>
