@@ -95,13 +95,13 @@ export function HomeMarketingPage({ onOpenSalesPopup }: HomeMarketingPageProps) 
       </header>
 
       <main className="text-center">
-        <section className="w-full min-h-[calc(100vh-88px)] px-4 py-14 border-b border-gray-900 flex items-center" style={heroStyle}>
-          <div className="max-w-4xl mx-auto w-full">
+        <section className="w-full min-h-[calc(100vh-88px)] py-14 border-b border-gray-900 flex items-center" style={heroStyle}>
+          <div className="max-w-4xl mx-auto w-full px-4">
             <p className="text-cyan-400 uppercase tracking-[0.2em] font-semibold text-sm">Join Us For The Official Season Opener</p>
             <h1 className="text-4xl md:text-6xl font-black leading-tight mt-4">
               Pro Arena Football Is Back In Denver
             </h1>
-            <div className="mt-7 max-w-3xl mx-auto rounded-xl border border-gray-800 bg-gray-950 p-4">
+            <div className="mt-7 max-w-3xl mx-auto">
               <iframe
                 src={VIDEO_SLOTS[0].embedUrl}
                 title={VIDEO_SLOTS[0].title}
