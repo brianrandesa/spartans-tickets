@@ -99,7 +99,7 @@ function App() {
 
       {showGaPopup && (
         <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
-          <div className="w-full max-w-xl rounded-xl border border-cyan-500/30 bg-gray-900 p-6">
+          <div className="w-full max-w-xl rounded-xl border border-cyan-500/30 bg-gray-900 p-6 text-center">
             <h2 className="text-2xl font-bold text-white mb-2">General Admission Is Live</h2>
             <p className="text-gray-300 mb-2">
               All tickets are now general admission. Buy fast and sit anywhere in the stadium.
@@ -127,7 +127,7 @@ function App() {
                   type="text"
                   value={leadData.ticketName}
                   onChange={(e) => setLeadData({ ...leadData, ticketName: e.target.value })}
-                  className="w-full px-4 py-3 bg-gray-950 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-cyan-500"
+                  className="w-full px-4 py-3 bg-gray-950 border border-gray-700 rounded-lg text-white text-center focus:outline-none focus:border-cyan-500"
                   placeholder="Full name"
                   required
                 />
@@ -139,7 +139,7 @@ function App() {
                     type="email"
                     value={leadData.email}
                     onChange={(e) => setLeadData({ ...leadData, email: e.target.value })}
-                    className="w-full px-4 py-3 bg-gray-950 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-cyan-500"
+                    className="w-full px-4 py-3 bg-gray-950 border border-gray-700 rounded-lg text-white text-center focus:outline-none focus:border-cyan-500"
                     required
                   />
                 </div>
@@ -149,13 +149,13 @@ function App() {
                     type="tel"
                     value={leadData.phone}
                     onChange={(e) => setLeadData({ ...leadData, phone: e.target.value })}
-                    className="w-full px-4 py-3 bg-gray-950 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-cyan-500"
+                    className="w-full px-4 py-3 bg-gray-950 border border-gray-700 rounded-lg text-white text-center focus:outline-none focus:border-cyan-500"
                     required
                   />
                 </div>
               </div>
               {leadError && <p className="text-red-400 text-sm">{leadError}</p>}
-              <div className="flex flex-wrap gap-3 justify-end pt-1">
+              <div className="flex flex-wrap gap-3 justify-center pt-1">
                 <button
                   type="button"
                   onClick={() => setShowGaPopup(false)}
