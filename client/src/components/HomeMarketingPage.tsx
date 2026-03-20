@@ -56,18 +56,17 @@ const PARTNER_LOGOS = [
   'https://storage.googleapis.com/msgsndr/UIgZIZySfnBryLV4WWIh/media/6904bc2c9faf018d493e5e70.png',
 ];
 
+function getRemainingSeconds(): number {
+  const target = new Date(FIRST_HOME_GAME_ISO).getTime();
+  return Math.max(0, Math.floor((target - Date.now()) / 1000));
+}
+
 export function HomeMarketingPage({ onOpenSalesPopup }: HomeMarketingPageProps) {
-  const [remainingSeconds, setRemainingSeconds] = useState(0);
+  const [remainingSeconds, setRemainingSeconds] = useState(getRemainingSeconds);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const updateCountdown = () => {
-      const now = Date.now();
-      const target = new Date(FIRST_HOME_GAME_ISO).getTime();
-      setRemainingSeconds(Math.max(0, Math.floor((target - now) / 1000)));
-    };
-
-    updateCountdown();
+    const updateCountdown = () => setRemainingSeconds(getRemainingSeconds());
     const intervalId = window.setInterval(updateCountdown, 1000);
     return () => window.clearInterval(intervalId);
   }, []);

@@ -158,6 +158,11 @@ export function GASalesPage({ onBackToHome }: GASalesPageProps) {
         <section className="grid lg:grid-cols-2 gap-8">
           <div className="space-y-6">
             <div className="bg-gray-950 rounded-xl border border-gray-800 p-6">
+              <img
+                src="https://assets.cdn.filesafe.space/UIgZIZySfnBryLV4WWIh/media/696a65663f943337b234c544.png"
+                alt="Colorado Spartans GA"
+                className="w-full rounded-lg border border-gray-800 mb-4 object-cover"
+              />
               <h2 className="text-xl font-bold mb-2">General Admission Only</h2>
               <p className="text-gray-300">
                 This page sells GA tickets only. There is no seat picking flow and no section-by-section checkout.

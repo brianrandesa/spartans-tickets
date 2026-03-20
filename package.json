@@ -2,6 +2,11 @@
   "name": "arena-tickets",
   "version": "1.0.0",
   "private": true,
+  "dependencies": {
+    "@supabase/supabase-js": "^2.47.0",
+    "micro": "^9.4.1",
+    "stripe": "^14.0.0"
+  },
   "scripts": {
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "dev:client": "cd client && npm run dev",

@@ -1,30 +1,41 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { getDb } from '../lib/db';
 
-// In-memory storage (in production, use a database)
-// Format: { "gameId-sectionId-row-seat": { soldAt, customerName, customerEmail } }
-let soldSeats: Record<string, { soldAt: string; customerName?: string; customerEmail?: string }> = {};
-
-export default function handler(req: VercelRequest, res: VercelResponse) {
+function cors(res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+}
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  cors(res);
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
-  // GET - retrieve all sold seats
-  if (req.method === 'GET') {
-    return res.json({
-      soldSeats: Object.entries(soldSeats).map(([id, data]) => ({
-        id,
-        ...data
-      })),
-      count: Object.keys(soldSeats).length
-    });
+  try {
+    const db = getDb();
+  } catch {
+    return res.status(503).json({ error: 'Database not configured' });
   }
 
-  // POST - add sold seats (single or bulk via CSV data)
+  const db = getDb();
+
+  if (req.method === 'GET') {
+    const { data, error } = await db.from('sold_seats').select('*').order('sold_at', { ascending: false });
+    if (error) {
+      return res.status(500).json({ error: error.message });
+    }
+    const soldSeats = (data || []).map((r: { id: string; sold_at: string; customer_name?: string; customer_email?: string }) => ({
+      id: r.id,
+      soldAt: r.sold_at,
+      customerName: r.customer_name,
+      customerEmail: r.customer_email
+    }));
+    return res.json({ soldSeats, count: soldSeats.length });
+  }
+
   if (req.method === 'POST') {
     const { seats } = req.body as { seats: Array<{ gameId: string; section: string; row: string; seat: string; customerName?: string; customerEmail?: string }> };
 
@@ -32,23 +43,35 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'Invalid seats data' });
     }
 
-    let added = 0;
-    seats.forEach(s => {
-      const id = `${s.gameId}-${s.section}-${s.row}-${s.seat}`;
-      if (!soldSeats[id]) {
-        soldSeats[id] = {
-          soldAt: new Date().toISOString(),
-          customerName: s.customerName,
-          customerEmail: s.customerEmail
-        };
-        added++;
-      }
-    });
+    const toInsert: { id: string; game_id: string; section_id: string; row: string; seat: string; customer_name?: string; customer_email?: string; source: string }[] = [];
+    const seen = new Set<string>();
 
-    return res.json({ success: true, added, total: Object.keys(soldSeats).length });
+    for (const s of seats) {
+      const id = `${s.gameId}-${s.section}-${s.row}-${s.seat}`;
+      if (seen.has(id)) continue;
+      seen.add(id);
+      toInsert.push({
+        id,
+        game_id: s.gameId,
+        section_id: s.section,
+        row: s.row,
+        seat: s.seat,
+        customer_name: s.customerName,
+        customer_email: s.customerEmail,
+        source: 'manual'
+      });
+    }
+
+    let added = 0;
+    for (const row of toInsert) {
+      const { error } = await db.from('sold_seats').upsert(row, { onConflict: 'id', ignoreDuplicates: true });
+      if (!error) added++;
+    }
+
+    const { count } = await db.from('sold_seats').select('*', { count: 'exact', head: true });
+    return res.json({ success: true, added, total: count ?? 0 });
   }
 
-  // DELETE - remove sold seat(s)
   if (req.method === 'DELETE') {
     const { seatIds } = req.body as { seatIds: string[] };
 
@@ -56,15 +79,13 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'Invalid seatIds' });
     }
 
-    let removed = 0;
-    seatIds.forEach(id => {
-      if (soldSeats[id]) {
-        delete soldSeats[id];
-        removed++;
-      }
-    });
+    const { error } = await db.from('sold_seats').delete().in('id', seatIds);
+    if (error) {
+      return res.status(500).json({ error: error.message });
+    }
 
-    return res.json({ success: true, removed, total: Object.keys(soldSeats).length });
+    const { count } = await db.from('sold_seats').select('*', { count: 'exact', head: true });
+    return res.json({ success: true, removed: seatIds.length, total: count ?? 0 });
   }
 
   return res.status(405).json({ error: 'Method not allowed' });

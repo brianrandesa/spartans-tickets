@@ -183,14 +183,17 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
         setArticles(JSON.parse(savedArticles));
       }
 
-      // Load sold tickets from localStorage
-      const soldSeatsJson = localStorage.getItem('spartans-sold-seats');
-      const localSoldSeats: string[] = soldSeatsJson ? JSON.parse(soldSeatsJson) : [];
-      const localTickets: SoldTicket[] = localSoldSeats.map(id => ({
-        id,
-        soldAt: new Date().toISOString()
-      }));
-      setSoldTickets(localTickets);
+      // Load sold tickets from API
+      const soldSeatsRes = await fetch('/api/admin/sold-seats');
+      if (soldSeatsRes.ok) {
+        const { soldSeats: data } = await soldSeatsRes.json();
+        setSoldTickets((data || []).map((t: { id: string; soldAt: string; customerName?: string; customerEmail?: string }) => ({
+          id: t.id,
+          soldAt: t.soldAt,
+          customerName: t.customerName,
+          customerEmail: t.customerEmail
+        })));
+      }
     } catch (error) {
       console.error('Error loading admin data:', error);
     }
@@ -203,16 +206,6 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
       return;
     }
 
-    // Save to localStorage for immediate updates
-    const soldKey = `${newSoldTicket.section}-${newSoldTicket.row}-${newSoldTicket.seat}`;
-    const soldSeatsJson = localStorage.getItem('spartans-sold-seats');
-    const soldSeats: string[] = soldSeatsJson ? JSON.parse(soldSeatsJson) : [];
-    if (!soldSeats.includes(soldKey)) {
-      soldSeats.push(soldKey);
-      localStorage.setItem('spartans-sold-seats', JSON.stringify(soldSeats));
-    }
-
-    // Also save to API for persistence
     try {
       const res = await fetch('/api/admin/sold-seats', {
         method: 'POST',
@@ -233,6 +226,8 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
         await loadData();
         setNewSoldTicket({ gameId: '1', section: '', row: '', seat: '', customerName: '', customerEmail: '' });
         showMessage('success', 'Ticket marked as sold!');
+      } else {
+        showMessage('error', 'Failed to add sold ticket');
       }
     } catch (error) {
       showMessage('error', 'Failed to add sold ticket');
@@ -242,13 +237,6 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
   const removeSoldTicket = async (id: string) => {
     if (!confirm('Remove this sold ticket?')) return;
 
-    // Remove from localStorage
-    const seatKey = id.split('-').slice(1).join('-'); // Remove gameId prefix
-    const soldSeatsJson = localStorage.getItem('spartans-sold-seats');
-    const soldSeats: string[] = soldSeatsJson ? JSON.parse(soldSeatsJson) : [];
-    const filtered = soldSeats.filter(s => s !== seatKey && s !== id);
-    localStorage.setItem('spartans-sold-seats', JSON.stringify(filtered));
-
     try {
       const res = await fetch('/api/admin/sold-seats', {
         method: 'DELETE',
@@ -257,8 +245,10 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
       });
 
       if (res.ok) {
-        setSoldTickets(soldTickets.filter(t => t.id !== id));
+        await loadData();
         showMessage('success', 'Ticket removed');
+      } else {
+        showMessage('error', 'Failed to remove ticket');
       }
     } catch (error) {
       showMessage('error', 'Failed to remove ticket');
@@ -285,17 +275,6 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
       showMessage('error', 'No valid seats found in CSV');
       return;
     }
-
-    // Save to localStorage for immediate updates
-    const soldSeatsJson = localStorage.getItem('spartans-sold-seats');
-    const soldSeatsArr: string[] = soldSeatsJson ? JSON.parse(soldSeatsJson) : [];
-    seats.forEach(s => {
-      const soldKey = `${s.section}-${s.row}-${s.seat}`;
-      if (!soldSeatsArr.includes(soldKey)) {
-        soldSeatsArr.push(soldKey);
-      }
-    });
-    localStorage.setItem('spartans-sold-seats', JSON.stringify(soldSeatsArr));
 
     try {
       const res = await fetch('/api/admin/sold-seats', {

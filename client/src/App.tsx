@@ -1,8 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { AdminLogin } from './components/AdminLogin';
 import { AdminDashboard } from './components/AdminDashboard';
 import { GASalesPage } from './components/GASalesPage';
 import { HomeMarketingPage } from './components/HomeMarketingPage';
+import { SeatMap, GAMES } from './components/SeatMap';
+import { Cart } from './components/Cart';
+import { CheckoutModal, type CheckoutData } from './components/CheckoutModal';
+import { useCart } from './hooks/useCart';
+import { useSeats } from './hooks/useSeats';
+import type { Section, Seat } from './types';
 
 function App() {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -92,6 +98,11 @@ function App() {
 
   if (window.location.pathname === '/ga' || window.location.pathname === '/ga/') {
     return <GASalesPage onBackToHome={() => { window.location.href = '/'; }} />;
+  }
+
+  // Arena seat picker - stadium layout with ticket selection
+  if (window.location.pathname === '/seats' || window.location.pathname === '/seats/') {
+    return <ArenaSeatPicker />;
   }
 
   return (
@@ -197,6 +208,64 @@ function App() {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function ArenaSeatPicker() {
+  const [selectedGameId, setSelectedGameId] = useState(GAMES[0].id);
+  const { sections, seats, loading, error } = useSeats(selectedGameId);
+  const cart = useCart();
+  const [showCheckout, setShowCheckout] = useState(false);
+  const selectedGame = GAMES.find(g => g.id === selectedGameId) || GAMES[0];
+
+  const selectedSeats = useMemo(() => new Set(cart.items.filter(item => item.game.id === selectedGameId).map(item => item.seat.id)), [cart.items, selectedGameId]);
+
+  const handleSeatToggle = (seat: Seat, section: Section) => cart.toggleSeat(seat, section, selectedGame);
+
+  const handleCheckoutComplete = async (data: CheckoutData) => {
+    try {
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: data.items.map(item => ({
+            seatId: item.seat.id,
+            section: item.section.name,
+            row: item.seat.row,
+            seatNumber: item.seat.number,
+            price: item.section.price,
+            game: { id: item.game.id, opponent: item.game.opponent, date: item.game.date, dateDisplay: item.game.dateDisplay, time: item.game.time }
+          })),
+          customer: { firstName: data.firstName, lastName: data.lastName, email: data.email, phone: data.phone },
+          couponCode: data.couponCode
+        }),
+      });
+      const result = await response.json();
+      if (result.url) window.location.href = result.url;
+    } catch {
+      alert('Checkout error. Please try again.');
+      setShowCheckout(false);
+    }
+  };
+
+  if (loading) return <div className="min-h-screen bg-black flex items-center justify-center"><div className="text-cyan-400 text-xl">Loading seats...</div></div>;
+  if (error) return <div className="min-h-screen bg-black flex items-center justify-center flex-col gap-4"><div className="text-red-400 text-xl">Error loading seats</div><a href="/" className="text-cyan-400">Back to Home</a></div>;
+
+  return (
+    <div className="min-h-screen bg-black">
+      <main className="container mx-auto px-4 py-8">
+        <div className="grid lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
+            <SeatMap sections={sections} seats={seats} selectedSeats={selectedSeats} onSeatToggle={handleSeatToggle} selectedGameId={selectedGameId} onGameChange={setSelectedGameId} />
+          </div>
+          <div className="lg:col-span-1">
+            <Cart items={cart.items} itemsByGame={cart.itemsByGame} onRemove={cart.removeSeat} onCheckout={() => setShowCheckout(true)} total={cart.total} />
+          </div>
+        </div>
+      </main>
+      <footer className="bg-gray-900 border-t border-gray-800 py-6 mt-8"><div className="container mx-auto px-4 text-center text-gray-400"><p>Colorado Spartans • Denver Coliseum</p></div></footer>
+      {showCheckout && <CheckoutModal items={cart.items} itemsByGame={cart.itemsByGame} total={cart.total} onClose={() => setShowCheckout(false)} onComplete={handleCheckoutComplete} />}
     </div>
   );
 }

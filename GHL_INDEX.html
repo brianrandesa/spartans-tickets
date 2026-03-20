@@ -242,5 +242,23 @@
     </div>
   </div>
   <script src="https://link.denver-leads.com/js/form_embed.js"></script>
+  <script>
+    (function () {
+      var target = new Date("2026-04-11T19:00:00-07:00").getTime();
+      var el = document.getElementById("countdownTime");
+      if (!el) return;
+      function pad(n) { return String(n).padStart(2, "0"); }
+      function tick() {
+        var now = Date.now();
+        var s = Math.max(0, Math.floor((target - now) / 1000));
+        var d = Math.floor(s / 86400);
+        var h = Math.floor((s % 86400) / 3600);
+        var m = Math.floor((s % 3600) / 60);
+        el.textContent = pad(d) + "d : " + pad(h) + "h : " + pad(m) + "m : " + pad(s % 60) + "s";
+      }
+      tick();
+      setInterval(tick, 1000);
+    })();
+  </script>
 </body>
 </html>

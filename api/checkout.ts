@@ -91,11 +91,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     lineItemsParams.set(`line_items[${lineItemIndex}][price_data][unit_amount]`, PROCESSING_FEE.toString());
     lineItemsParams.set(`line_items[${lineItemIndex}][quantity]`, '1');
 
-    // Add metadata
+    // Add metadata (including seat items for webhook)
+    const seatItems = items.map(i => ({ gameId: i.game.id, section: i.section, row: i.row, seat: i.seatNumber }));
     lineItemsParams.set('metadata[customer_name]', `${customer?.firstName || ''} ${customer?.lastName || ''}`.trim());
     lineItemsParams.set('metadata[customer_phone]', customer?.phone || '');
     lineItemsParams.set('metadata[total_tickets]', items.length.toString());
+    lineItemsParams.set('metadata[total_amount]', (totalAmount + PROCESSING_FEE).toString());
     lineItemsParams.set('metadata[games]', Object.keys(itemsByGame).length.toString());
+    lineItemsParams.set('metadata[seat_items]', JSON.stringify(seatItems));
     if (couponCode) {
       lineItemsParams.set('metadata[coupon_code]', couponCode.toUpperCase());
     }

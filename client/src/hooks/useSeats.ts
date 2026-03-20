@@ -6,7 +6,7 @@ interface ApiSection extends Section {
   available_seats: number;
 }
 
-export function useSeats() {
+export function useSeats(gameId: string = '1') {
   const [sections, setSections] = useState<Section[]>([]);
   const [seats, setSeats] = useState<Map<string, Seat[]>>(new Map());
   const [loading, setLoading] = useState(true);
@@ -14,10 +14,9 @@ export function useSeats() {
 
   const fetchData = useCallback(async () => {
     try {
-      // Fetch sections and seats in parallel
       const [sectionsRes, seatsRes] = await Promise.all([
-        fetch('/api/sections'),
-        fetch('/api/seats')
+        fetch(`/api/sections?gameId=${encodeURIComponent(gameId)}`),
+        fetch(`/api/seats?gameId=${encodeURIComponent(gameId)}`)
       ]);
 
       if (!sectionsRes.ok || !seatsRes.ok) {
@@ -27,7 +26,6 @@ export function useSeats() {
       const sectionsData = await sectionsRes.json() as ApiSection[];
       const seatsData = await seatsRes.json() as Record<string, Seat[]>;
 
-      // Transform sections
       const transformedSections: Section[] = sectionsData.map(s => ({
         id: s.id,
         name: s.name,
@@ -37,22 +35,9 @@ export function useSeats() {
         availableSeats: s.available_seats,
       }));
 
-      // Get locally stored sold seats
-      const soldSeatsJson = localStorage.getItem('spartans-sold-seats');
-      const soldSeats: Set<string> = new Set(soldSeatsJson ? JSON.parse(soldSeatsJson) : []);
-
-      // Convert seats object to Map, checking against local sold seats
       const seatsMap = new Map<string, Seat[]>();
       for (const [sectionId, sectionSeats] of Object.entries(seatsData)) {
-        // Mark any locally sold seats as sold
-        const updatedSeats = sectionSeats.map((seat: Seat): Seat => {
-          const soldKey = `${sectionId}-${seat.row}-${seat.number}`;
-          if (soldSeats.has(soldKey)) {
-            return { ...seat, status: 'sold' as const };
-          }
-          return seat;
-        });
-        seatsMap.set(sectionId, updatedSeats);
+        seatsMap.set(sectionId, sectionSeats);
       }
 
       setSections(transformedSections);
@@ -64,12 +49,12 @@ export function useSeats() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [gameId]);
 
   useEffect(() => {
+    setLoading(true);
     fetchData();
 
-    // Poll for updates every 30 seconds
     const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
   }, [fetchData]);
